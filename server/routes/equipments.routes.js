@@ -1,10 +1,13 @@
 const equipmentmodel = require("../models/equipments.model");
+const filtermodel = require("../models/filters.model");
 const express = require("express");
 const app = express();
 
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
+    const filters = await filtermodel.find();
+    console.log(filters);
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup:{

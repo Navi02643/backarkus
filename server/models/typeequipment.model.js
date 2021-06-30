@@ -12,6 +12,7 @@ const typeequipmentSchema = new Schema({
   },
   imagen: {
     type: String,
+    default: "",
   }
 });
 
