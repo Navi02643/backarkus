@@ -83,27 +83,27 @@ app.put("/", async (req, res) => {
       });
     }
     const filterupdate = await filtermodel.findByIdAndUpdate(
-        idFilter,
-        { $set: newfilter },
-        { new: true }
+      idFilter,
+      { $set: newfilter },
+      { new: true }
     );
     if (!filterupdate) {
-        return res.status(400).json({
-          ok: false,
-          resp: 400,
-          msg: "Error: Trying to update the filters.",
-          cont: 0,
-        });
-      } else {
-        return res.status(200).json({
-          ok: true,
-          resp: 200,
-          msg: "Success: The filters was updated successfully.",
-          cont: {
-            filterfind,
-          },
-        });
-      }
+      return res.status(400).json({
+        ok: false,
+        resp: 400,
+        msg: "Error: Trying to update the filters.",
+        cont: 0,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        resp: 200,
+        msg: "Success: The filters was updated successfully.",
+        cont: {
+          filterfind,
+        },
+      });
+    }
   } catch (err) {
     res.status(500).send({
       estatus: "500",

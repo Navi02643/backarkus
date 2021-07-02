@@ -13,7 +13,7 @@ const typeequipmentSchema = new Schema({
   imagen: {
     type: String,
     default: "",
-  }
+  },
 });
 
 module.exports = mongoose.model("Typeequipment", typeequipmentSchema);

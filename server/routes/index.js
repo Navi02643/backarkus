@@ -8,9 +8,6 @@ app.use("/role", require("./role.routes"));
 app.use("/typeequipments", require("./typeequipments.routes"));
 app.use("/user", require("./user.routes"));
 app.use("/waiting", require("./waiting.routes"));
-app.use("/filters",require("./filters.routes"));
-
-
-
+app.use("/filters", require("./filters.routes"));
 
 module.exports = app;
