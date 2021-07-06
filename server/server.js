@@ -4,12 +4,12 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
-const passport = require('passport');
+const passport = require("passport");
 
 ////////INITIALIZATIONS
 require("./config/db");
 require("colors");
-require('./middlewares/passport')(passport);
+require("./middlewares/passport")(passport);
 
 ////////MIDDLEWARES
 app.use(passport.initialize());
@@ -33,9 +33,9 @@ app.use(bodyParser.json());
 /////////ROUTES
 app.use("/api", require("./routes/index"));
 
-
 /////////CONNECTION TO MONGODB
-mongoose.connect(process.env.URLDB, {
+mongoose
+  .connect(process.env.URLDB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,

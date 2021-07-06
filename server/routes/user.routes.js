@@ -7,7 +7,6 @@ const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const app = express();
 
-
 app.get("/", async (req, res) => {
   try {
     const user = await usermodel.find({ status: true });
@@ -55,43 +54,41 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/", async (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
 
-   const { errors, isValid } = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
-   if (!isValid) {
-     return res.status(400).json(errors);
-   }
- 
-   usermodel.findOne({ email: req.body.email }).then(user => {
-     if (user) {
-       return res.status(400).json({ infoError: "Email already exists" });
-     } else {
-       const newUser = new usermodel({
-         IDcampus: req.body.IDcampus,
-         picture: req.body.picture,
-         username: req.body.username,
-         lastname: req.body.lastname,
-         email: req.body.email,
-         phonenumber: req.body.phonenumber,
-         userprofile: req.body.userprofile,
-         IDrole: req.body.IDrole,
-         account: req.body.account,
-         password: req.body.password
-       });
- 
-       bcrypt.genSalt(10, (err, salt) => {
-         bcrypt.hash(newUser.password, salt, (err, hash) => {
-           if (err) throw err;
-           newUser.password = hash;
-           newUser
-             .save()
-             .then(user => res.json(user))
-             .catch(err => console.log(err));
-         });
-       });
-     }
-   });
+  usermodel.findOne({ email: req.body.email }).then((user) => {
+    if (user) {
+      return res.status(400).json({ email: "Email already exists" });
+    } else {
+      const newUser = new usermodel({
+        IDcampus: req.body.IDcampus,
+        picture: req.body.picture,
+        username: req.body.username,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        userprofile: req.body.userprofile,
+        IDrole: req.body.IDrole,
+        account: req.body.account,
+        password: req.body.password,
+      });
 
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser
+            .save()
+            .then((user) => res.json(user))
+            .catch((err) => console.log(err));
+        });
+      });
+    }
+  });
 });
 
 app.put("/", async (req, res) => {
@@ -216,8 +213,8 @@ app.delete("/", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-   //////// FORM VALIDATION
-   const { errors, isValid } = validateLoginInput(req.body);
+  //////// FORM VALIDATION
+  const { errors, isValid } = validateLoginInput(req.body);
 
    //////// CHECK VALIDATION
    if (!isValid) {
@@ -279,4 +276,4 @@ app.post("/login", async (req, res) => {
    });
 });
 
-module.exports = app; 
+module.exports = app;

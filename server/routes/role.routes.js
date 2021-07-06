@@ -63,7 +63,7 @@ app.post("/", async (req, res) => {
       });
     }
     const rolefind = await rolemodel.findOne({
-      name: { $regex: `${role.name}$`, $options: "i" },
+      rolename: { $regex: `${role.rolename}$`, $options: "i" },
     });
     if (rolefind) {
       return res.status(400).json({
@@ -71,7 +71,7 @@ app.post("/", async (req, res) => {
         resp: 400,
         msg: "The role you are trying to register already exists",
         cont: {
-          name: rolefind.name,
+          rolename: rolefind.rolename,
         },
       });
     }

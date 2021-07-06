@@ -5,9 +5,12 @@ const app = express();
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
+    const filters = await filtermodel.find();
+    filter = filters;
+    console.log(filter);
     const equipment = await equipmentmodel.aggregate([
       {
-        $lookup:{
+        $lookup: {
           from: "campus",
           localField: "IDcampus",
           foreignField: "_id",
@@ -15,7 +18,7 @@ app.get("/", async (req, res) => {
         },
       },
       {
-        $lookup:{
+        $lookup: {
           from: "typeequipments",
           localField: "IDtypeequipment",
           foreignField: "_id",
@@ -23,7 +26,7 @@ app.get("/", async (req, res) => {
         },
       },
       {
-        $lookup:{
+        $lookup: {
           from: "users",
           localField: "IDuser",
           foreignField: "_id",
@@ -31,18 +34,31 @@ app.get("/", async (req, res) => {
         },
       },
       {
-        $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$campus",0 ] }, "$$ROOT"]}}
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
       },
       {
-        $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$typeequipments",0 ] }, "$$ROOT"]}}
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
       },
       {
-        $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$user",0 ] }, "$$ROOT"]}}
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          },
+        },
       },
-      { $match: { 
-        tename: typeequipment
+      {
+        $match: {
+          tename: typeequipment,
+        },
       },
-    },
     ]);
     idEquipment = req.query.idEquipment;
     const equipmentfind = await equipmentmodel.findById(idEquipment);

@@ -12,5 +12,6 @@ app.use("/cards", require("./cards.routes"));
 
 
 
+app.use("/filters", require("./filters.routes"));
 
 module.exports = app;
