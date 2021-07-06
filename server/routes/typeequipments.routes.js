@@ -7,11 +7,11 @@ app.get("/", async (req, res) => {
     const typeequipment = await Typeequipmentmodel.find({ status: true });
     idTypeEquipment = req.query.idTypeEquipment;
     tename = req.query.tename;
-    // const typeequipmentfind = await Typeequipmentmodel.findById(
-    //   idTypeEquipment
-    // );
-    const typeequipmentfindbyname = await Typeequipmentmodel.find( {tename} );
-    if (typeequipmentfindbyname) {
+    const typeequipmentfind = await Typeequipmentmodel.findById(
+      idTypeEquipment
+    );
+    // const typeequipmentfind = await Typeequipmentmodel.find( {tename} );
+    if (typeequipmentfind) {
       return res.status(400).json({
         estatus: "200",
         err: false,

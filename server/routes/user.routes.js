@@ -62,7 +62,7 @@ app.post("/", async (req, res) => {
 
   usermodel.findOne({ email: req.body.email }).then((user) => {
     if (user) {
-      return res.status(400).json({ email: "Email already exists" });
+      return res.status(400).json({ infoError: "Email already exists" });
     } else {
       const newUser = new usermodel({
         IDcampus: req.body.IDcampus,
