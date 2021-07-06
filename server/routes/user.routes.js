@@ -64,7 +64,7 @@ app.post("/", async (req, res) => {
  
    usermodel.findOne({ email: req.body.email }).then(user => {
      if (user) {
-       return res.status(400).json({ email: "Email already exists" });
+       return res.status(400).json({ infoError: "Email already exists" });
      } else {
        const newUser = new usermodel({
          IDcampus: req.body.IDcampus,
@@ -92,62 +92,6 @@ app.post("/", async (req, res) => {
      }
    });
 
-  // try {
-  //   const user = new usermodel(req.body);
-  //   let err = user.validateSync();
-  //   if (err) {
-  //     return res.status(400).json({
-  //       ok: false,
-  //       resp: 400,
-  //       msg: "Error: Error to insert user.",
-  //       cont: {
-  //         err,
-  //       },
-  //     });
-  //   }
-  //   const userfind = await usermodel.findOne({
-  //     email: { $regex: `${user.email}$`, $options: "i" },
-  //   });
-  //   if (userfind) {
-  //     return res.status(400).json({
-  //       ok: false,
-  //       resp: 400,
-  //       msg: "This email already exists",
-  //       cont: {
-  //         email: userfind,
-  //       },
-  //     });
-  //   }
-  //   const newuser = await user.save();
-  //   if (newuser.length <= 0) {
-  //     res.status(400).send({
-  //       estatus: "400",
-  //       err: true,
-  //       msg: "Error: user could not be registered.",
-  //       cont: {
-  //         newuser,
-  //       },
-  //     });
-  //   } else {
-  //     res.status(200).send({
-  //       estatus: "200",
-  //       err: false,
-  //       msg: "Success: Information inserted correctly.",
-  //       cont: {
-  //         newuser,
-  //       },
-  //     });
-  //   }
-  // } catch (err) {
-  //   res.status(500).send({
-  //     estatus: "500",
-  //     err: true,
-  //     msg: "Error: Error to insert the user",
-  //     cont: {
-  //       err: Object.keys(err).length === 0 ? err.message : err,
-  //     },
-  //   });
-  // }
 });
 
 app.put("/", async (req, res) => {
@@ -287,7 +231,7 @@ app.post("/login", async (req, res) => {
    usermodel.findOne({ email }).then(user => {
      /////// CHECK IF USER EXISTS
      if (!user) {
-       return res.status(404).json({ emailnotfound: "Email not found" });
+       return res.status(404).json({ infoError: "Email not found" });
      }
  
      /////// CHECK PASSWORD
@@ -329,7 +273,7 @@ app.post("/login", async (req, res) => {
        } else {
          return res
            .status(400)
-           .json({ passwordincorrect: "Password incorrect" });
+           .json({ infoError: "Password incorrect" });
        }
      });
    });
