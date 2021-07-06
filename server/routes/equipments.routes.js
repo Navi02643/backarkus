@@ -5,9 +5,6 @@ const app = express();
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
-    const filters = await filtermodel.find();
-    filter = filters;
-    console.log(filter);
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
