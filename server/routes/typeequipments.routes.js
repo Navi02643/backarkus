@@ -6,16 +6,18 @@ app.get("/", async (req, res) => {
   try {
     const typeequipment = await Typeequipmentmodel.find({ status: true });
     idTypeEquipment = req.query.idTypeEquipment;
+    tename = req.query.tename;
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
+    // const typeequipmentfind = await Typeequipmentmodel.find( {tename} );
     if (typeequipmentfind) {
       return res.status(400).json({
         estatus: "200",
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: typeequipmentfind,
+          name: typeequipmentfindbyname,
         },
       });
     }
