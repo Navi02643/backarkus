@@ -3,11 +3,11 @@ const express = require("express");
 const app = express();
 
 app.get("/", async (req, res) => {
-  try{
+  try {
     const filter = await filtermodel.find();
     const idFilter = req.query.idFilter;
-    const filterfind = await filtermodel.findById(idFilter);
-    if(filterfind){
+    const filterfind = await filtermodel.find({ typeequipment: idFilter });
+    if (filterfind) {
       return res.status(400).json({
         estatus: "200",
         err: false,
@@ -17,7 +17,7 @@ app.get("/", async (req, res) => {
         },
       });
     }
-    if ( filter.length <= 0){
+    if (filter.length <= 0) {
       res.status(404).send({
         estatus: "404",
         err: true,
@@ -36,7 +36,7 @@ app.get("/", async (req, res) => {
         },
       });
     }
-  }catch(err){
+  } catch (err) {
     res.status(500).send({
       estatus: "500",
       err: true,
@@ -62,6 +62,7 @@ app.post("/", async (req, res) => {
         },
       });
     }
+    
     const newfilter = await filter.save();
     if (newfilter.length <= 0) {
       res.status(400).send({
