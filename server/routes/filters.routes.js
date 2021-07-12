@@ -2,6 +2,52 @@ const filtermodel = require("../models/filters.model");
 const express = require("express");
 const app = express();
 
+app.get("/", async (req, res) => {
+  try {
+    const filter = await filtermodel.find();
+    const idFilter = req.query.idFilter;
+    const filterfind = await filtermodel.find({ typeequipment: idFilter });
+    if (filterfind) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: filterfind,
+        },
+      });
+    }
+    if (filter.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No filters were found in the database.",
+        cont: {
+          filter,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          filter,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting the filters.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 app.post("/", async (req, res) => {
   try {
     const filter = new filtermodel(req.body);
@@ -16,6 +62,7 @@ app.post("/", async (req, res) => {
         },
       });
     }
+    
     const newfilter = await filter.save();
     if (newfilter.length <= 0) {
       res.status(400).send({

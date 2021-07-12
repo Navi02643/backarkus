@@ -5,6 +5,7 @@ const app = express();
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
+    state = req.query.state;
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
@@ -53,7 +54,7 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          tename: typeequipment,
+          $and: [{ tename: typeequipment }, { state: state }, { status: true }],
         },
       },
     ]);
