@@ -276,4 +276,38 @@ app.post("/login", async (req, res) => {
    });
 });
 
+app.get("/userName", async (req, res) => {
+  try {
+    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3});
+    if (user.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No users were found in the database.",
+        cont: {
+          user,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          user,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting user.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 module.exports = app;

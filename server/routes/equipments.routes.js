@@ -65,7 +65,7 @@ app.get("/", async (req, res) => {
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: equipmentfind,
+          name: equipmentfind
         },
       });
     }
