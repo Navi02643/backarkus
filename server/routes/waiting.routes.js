@@ -4,7 +4,49 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const waiting = await waitingmodel.find();
+    const waiting = await waitingmodel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+      {
+        $lookup: {
+          from: "typeequipments",
+          localField: "IDtypeequiment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          username: 1,
+          lastname: 1,
+          IDuser: 1,
+          tename: 1,
+          IDtypeequiment: 1,
+        },
+      },
+    ]);
+    console.log(waiting);
     idWaiting = req.query.idWaiting;
     const waitingfind = await waitingmodel.findById(idWaiting);
     if (waitingfind) {

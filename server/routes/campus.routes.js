@@ -13,7 +13,7 @@ app.get("/", async (req, res) => {
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: Campusfind,
+          campusname: Campusfind,
         },
       });
     }
@@ -63,7 +63,7 @@ app.post("/", async (req, res) => {
       });
     }
     const campusfind = await campusmodel.findOne({
-      name: { $regex: `${campus.name}$`, $options: "i" },
+      campusname: { $regex: `${campus.campusname}$`, $options: "i" },
     });
     if (campusfind) {
       return res.status(400).json({
@@ -71,7 +71,7 @@ app.post("/", async (req, res) => {
         resp: 400,
         msg: "The campus you are trying to register already exists",
         cont: {
-          name: campusfind.name,
+          campusname: campusfind.campusname,
         },
       });
     }

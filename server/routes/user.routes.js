@@ -7,7 +7,6 @@ const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const app = express();
 
-
 app.get("/", async (req, res) => {
   try {
     const user = await usermodel.find({ status: true });
@@ -55,99 +54,41 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/", async (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
 
-   const { errors, isValid } = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
-   if (!isValid) {
-     return res.status(400).json(errors);
-   }
- 
-   usermodel.findOne({ email: req.body.email }).then(user => {
-     if (user) {
-       return res.status(400).json({ email: "Email already exists" });
-     } else {
-       const newUser = new usermodel({
-         IDcampus: req.body.IDcampus,
-         picture: req.body.picture,
-         name: req.body.name,
-         lastname: req.body.lastname,
-         email: req.body.email,
-         phonenumber: req.body.phonenumber,
-         userprofile: req.body.userprofile,
-         IDrole: req.body.IDrole,
-         account: req.body.account,
-         password: req.body.password
-       });
- 
-       bcrypt.genSalt(10, (err, salt) => {
-         bcrypt.hash(newUser.password, salt, (err, hash) => {
-           if (err) throw err;
-           newUser.password = hash;
-           newUser
-             .save()
-             .then(user => res.json(user))
-             .catch(err => console.log(err));
-         });
-       });
-     }
-   });
+  usermodel.findOne({ email: req.body.email }).then((user) => {
+    if (user) {
+      return res.status(400).json({ infoError: "Email already exists" });
+    } else {
+      const newUser = new usermodel({
+        IDcampus: req.body.IDcampus,
+        picture: req.body.picture,
+        username: req.body.username,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        userprofile: req.body.userprofile,
+        IDrole: req.body.IDrole,
+        account: req.body.account,
+        password: req.body.password,
+      });
 
-  // try {
-  //   const user = new usermodel(req.body);
-  //   let err = user.validateSync();
-  //   if (err) {
-  //     return res.status(400).json({
-  //       ok: false,
-  //       resp: 400,
-  //       msg: "Error: Error to insert user.",
-  //       cont: {
-  //         err,
-  //       },
-  //     });
-  //   }
-  //   const userfind = await usermodel.findOne({
-  //     email: { $regex: `${user.email}$`, $options: "i" },
-  //   });
-  //   if (userfind) {
-  //     return res.status(400).json({
-  //       ok: false,
-  //       resp: 400,
-  //       msg: "This email already exists",
-  //       cont: {
-  //         email: userfind,
-  //       },
-  //     });
-  //   }
-  //   const newuser = await user.save();
-  //   if (newuser.length <= 0) {
-  //     res.status(400).send({
-  //       estatus: "400",
-  //       err: true,
-  //       msg: "Error: user could not be registered.",
-  //       cont: {
-  //         newuser,
-  //       },
-  //     });
-  //   } else {
-  //     res.status(200).send({
-  //       estatus: "200",
-  //       err: false,
-  //       msg: "Success: Information inserted correctly.",
-  //       cont: {
-  //         newuser,
-  //       },
-  //     });
-  //   }
-  // } catch (err) {
-  //   res.status(500).send({
-  //     estatus: "500",
-  //     err: true,
-  //     msg: "Error: Error to insert the user",
-  //     cont: {
-  //       err: Object.keys(err).length === 0 ? err.message : err,
-  //     },
-  //   });
-  // }
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser
+            .save()
+            .then((user) => res.json(user))
+            .catch((err) => console.log(err));
+        });
+      });
+    }
+  });
 });
 
 app.put("/", async (req, res) => {
@@ -192,14 +133,14 @@ app.put("/", async (req, res) => {
       return res.status(400).json({
         ok: false,
         resp: 400,
-        msg: "Error: Trying to update the role.",
+        msg: "Error: Trying to update the user.",
         cont: 0,
       });
     } else {
       return res.status(200).json({
         ok: true,
         resp: 200,
-        msg: "Success: The role was updated successfully.",
+        msg: "Success: The user was updated successfully.",
         cont: {
           Userfind,
         },
@@ -272,8 +213,8 @@ app.delete("/", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-   //////// FORM VALIDATION
-   const { errors, isValid } = validateLoginInput(req.body);
+  //////// FORM VALIDATION
+  const { errors, isValid } = validateLoginInput(req.body);
 
    //////// CHECK VALIDATION
    if (!isValid) {
@@ -287,7 +228,7 @@ app.post("/login", async (req, res) => {
    usermodel.findOne({ email }).then(user => {
      /////// CHECK IF USER EXISTS
      if (!user) {
-       return res.status(404).json({ emailnotfound: "Email not found" });
+       return res.status(404).json({ infoError: "Email not found" });
      }
  
      /////// CHECK PASSWORD
@@ -297,7 +238,12 @@ app.post("/login", async (req, res) => {
          // CREATE JWT PAYLOAD
          const payload = {
            id: user.id,
-           name: user.name
+           username: user.username,
+           lastname: user.lastname,
+           email: user.email,
+           phonenumber: user.phonenumber,
+           userprofile: user.userprofile,
+           account: user.account
          };
  
          // SIGN TOKEN
@@ -310,17 +256,58 @@ app.post("/login", async (req, res) => {
            (err, token) => {
              res.json({
                success: true,
-               token: "Token " + token
+               token: "Token " + token,
+               id: user.id,
+               username: user.username,
+               lastname: user.lastname,
+               email: user.email,
+               phonenumber: user.phonenumber,
+               userprofile: user.userprofile,
+               account: user.account
              });
            }
          );
        } else {
          return res
            .status(400)
-           .json({ passwordincorrect: "Password incorrect" });
+           .json({ infoError: "Password incorrect" });
        }
      });
    });
+});
+
+app.get("/userName", async (req, res) => {
+  try {
+    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3});
+    if (user.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No users were found in the database.",
+        cont: {
+          user,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          user,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting user.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
 });
 
 module.exports = app;

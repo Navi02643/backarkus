@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const assignedSchema = new Schema({
   IDuser: {
     type: Schema.Types.ObjectId,
-    ref: "Role",
+    ref: "User",
     required: [true, "The IDuser is required"],
   },
   serialnumber: {

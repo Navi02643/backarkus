@@ -1,13 +1,45 @@
 const assignedmodel = require("../models/assigned.model");
+const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
 const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const assigned = await assignedmodel.find({ status: true });
+    const assigned = await assignedmodel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+      {
+        $lookup: {
+          from: "equipment",
+          localField: "serialnumber",
+          foreignField: "_id",
+          as: "equipment",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$equipment", 0] }, "$$ROOT"],
+          },
+        },
+      },
+    ]);
     idAssigned = req.query.idAssigned;
     const assignedfind = await assignedmodel.findById(idAssigned);
-    if(assignedfind){
+    if (assignedfind) {
       return res.status(400).json({
         estatus: "200",
         err: false,
@@ -17,7 +49,7 @@ app.get("/", async (req, res) => {
         },
       });
     }
-    if(assigned.length <= 0){
+    if (assigned.length <= 0) {
       res.status(404).send({
         estatus: "404",
         err: true,
@@ -67,14 +99,14 @@ app.post("/", async (req, res) => {
       res.status(400).send({
         estatus: "400",
         err: true,
-        msg:"Error: Assigned could not be registered.",
+        msg: "Error: Assigned could not be registered.",
         newassigned,
       });
     } else {
       res.status(200).send({
-        estatus : "200",
+        estatus: "200",
         err: false,
-        msg: "Information obtained correctly.",
+        msg: "Success: Information inserted correctly.",
       });
     }
   } catch (err) {
@@ -91,8 +123,8 @@ app.post("/", async (req, res) => {
 
 app.put("/", async (req, res) => {
   try {
-    const idAssigned= req.query.idAssigned;
-    if(req.query.idAssigned == "") {
+    const idAssigned = req.query.idAssigned;
+    if (req.query.idAssigned == "") {
       return res.status(400).send({
         estatus: "400",
         err: true,
@@ -102,8 +134,8 @@ app.put("/", async (req, res) => {
     }
 
     req.body._id = idAssigned;
-    const assignedfind = await assignedmodel.findById(idAssigned)
-    if(!assignedfind){
+    const assignedfind = await assignedmodel.findById(idAssigned);
+    if (!assignedfind) {
       return res.status(404).send({
         estatus: "404",
         err: true,
@@ -117,29 +149,29 @@ app.put("/", async (req, res) => {
       return res.status(400).json({
         ok: false,
         resp: 400,
-        msg:"Error: Error inserting assigned",
-        cont:{
+        msg: "Error: Error inserting assigned",
+        cont: {
           err,
         },
       });
     }
     const assignedupdate = await assignedmodel.findByIdAndUpdate(
       idAssigned,
-      {$set: idAssigned},
-      { new: true}
+      { $set: idAssigned },
+      { new: true }
     );
-    if(!assignedupdate){
+    if (!assignedupdate) {
       return res.status(400).json({
         ok: false,
         resp: 400,
-        msg:"Error: Trying to update the assigned",
+        msg: "Error: Trying to update the assigned",
         cont: 0,
       });
-    }else{
+    } else {
       res.status(200).json({
         ok: true,
         resp: 200,
-        msg:"Success: The assigned was updated successfully.",
+        msg: "Success: The assigned was updated successfully.",
         cont: {
           assignedfind,
         },
@@ -159,7 +191,7 @@ app.put("/", async (req, res) => {
 
 app.delete("/", async (req, res) => {
   try {
-    if (req.query.idAssigned == ""){
+    if (req.query.idAssigned == "") {
       return res.status(400).send({
         estatus: "400",
         err: true,
@@ -168,12 +200,12 @@ app.delete("/", async (req, res) => {
       });
     }
     idAssigned = req.query.idAssigned;
-    const assignedfind = await assignedmodel.findById(idAssigned)
-    if(!assignedfind){
+    const assignedfind = await assignedmodel.findById(idAssigned);
+    if (!assignedfind) {
       return res.status(404).send({
         estatus: "404",
         err: true,
-        msg:"Error: The assigned was not found in the database.",
+        msg: "Error: The assigned was not found in the database.",
         cont: assignedfind,
       });
     }
@@ -182,14 +214,14 @@ app.delete("/", async (req, res) => {
       return res.status(400).json({
         ok: false,
         resp: 400,
-        msg:"Error: When Trying to delete the assigned.",
+        msg: "Error: When Trying to delete the assigned.",
         cont: 0,
       });
-    }else{
+    } else {
       return res.status(200).json({
         ok: true,
         resp: 200,
-        msg:"Success: The assigned has been successfully.",
+        msg: "Success: The assigned has been successfully.",
         cont: {
           assigneddelete,
         },

@@ -1,22 +1,23 @@
 const Typeequipmentmodel = require("../models/typeequipment.model");
 const express = require("express");
-const typeequipmentModel = require("../models/typeequipment.model");
 const app = express();
 
 app.get("/", async (req, res) => {
   try {
     const typeequipment = await Typeequipmentmodel.find({ status: true });
     idTypeEquipment = req.query.idTypeEquipment;
+    tename = req.query.tename;
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
+    // const typeequipmentfind = await Typeequipmentmodel.find( {tename} );
     if (typeequipmentfind) {
       return res.status(400).json({
         estatus: "200",
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: typeequipmentfind,
+          name: typeequipmentfindbyname,
         },
       });
     }
@@ -66,7 +67,7 @@ app.post("/", async (req, res) => {
       });
     }
     const typeequipmentfind = await Typeequipmentmodel.findOne({
-      name: { $regex: `${typeequipment.name}$`, $options: "i" },
+      tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
     if (typeequipmentfind) {
       return res.status(400).json({
@@ -74,7 +75,7 @@ app.post("/", async (req, res) => {
         resp: 400,
         msg: "The type of equipment you are trying to register already exists",
         cont: {
-          name: typeequipmentfind.name,
+          tename: typeequipmentfind.tename,
         },
       });
     }

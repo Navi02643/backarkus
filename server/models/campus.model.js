@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const campusSchema = new Schema({
-  name: {
+  campusname: {
     type: String,
     required: [true, "The campus name is required"],
   },
