@@ -217,7 +217,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The equipment was update successfully.",
         cont: {
-          equipmentfind,
+          equipmentupdate,
         },
       });
     }
@@ -256,7 +256,7 @@ app.delete("/", async (req, res) => {
     }
     const equipmentupdate = await equipmentmodel.findByIdAndUpdate(
       idEquipment,
-      { $set: { status } },
+      { $set: { status: status } },
       { new: true }
     );
     if (!equipmentupdate) {
