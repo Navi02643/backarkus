@@ -1,10 +1,12 @@
 const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
+const pdf = require("html-pdf");
 const app = express();
 
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
+    state = req.query.state;
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
@@ -53,8 +55,11 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          tename: typeequipment,
+          $and: [{ tename: typeequipment }, { status: true }],
         },
+      },
+      {
+        $sort: { state: -1},
       },
     ]);
     idEquipment = req.query.idEquipment;
@@ -158,6 +163,8 @@ app.post("/", async (req, res) => {
     });
   }
 });
+
+app.post("/pdf", async (req, res) => {});
 
 app.put("/", async (req, res) => {
   try {
