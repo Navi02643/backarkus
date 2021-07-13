@@ -181,7 +181,7 @@ app.delete("/", async (req, res) => {
     }
     const userupdate = await usermodel.findByIdAndUpdate(
       idUser,
-      { $set: { status } },
+      { $set: { status: status } },
       { new: true }
     );
     if (!userupdate) {

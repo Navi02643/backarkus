@@ -158,7 +158,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The campus was updated successfully.",
         cont: {
-          campusfind,
+          campusupdate,
         },
       });
     }
@@ -185,6 +185,7 @@ app.delete("/", async (req, res) => {
       });
     }
     idCampus = req.query.idCampus;
+    status = req.body.status;
     const campusfind = await campusmodel.findById(idCampus);
     if (!campusfind) {
       return res.status(404).send({
@@ -194,8 +195,11 @@ app.delete("/", async (req, res) => {
         cont: campusfind,
       });
     }
-    const campusdelete = await campusmodel.findByIdAndDelete(campusfind);
-    if (!campusdelete) {
+    const campusupdate = await campusmodel.findByIdAndUpdate(
+      idCampus,
+      { $set: { status: status } },
+      { new: true });
+    if (!campusupdate) {
       return res.status(400).json({
         ok: false,
         resp: 400,
@@ -208,7 +212,7 @@ app.delete("/", async (req, res) => {
         resp: 200,
         msg: `Success: the campus has been successfully removed.`,
         cont: {
-          campusdelete,
+          campusupdate,
         },
       });
     }
