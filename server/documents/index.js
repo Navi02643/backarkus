@@ -1,4 +1,4 @@
-module.exports = ({ name, price1, price2, receiptId }) => {
+module.exports = ({ elemento, marca, modelo, serie }) => {
     const today = new Date();
 return `
 <!DOCTYPE html>
@@ -22,10 +22,10 @@ return `
     <th>No. de Serie</th>
   </tr>
   <tr>
-    <td>Laptop</td>
-    <td>Dell</td>
-    <td>Dell Latitude 5520</td>
-    <td>9Y3BY93</td>
+    <td>${elemento}</td>
+    <td>${marca}</td>
+    <td>${modelo}</td>
+    <td>${serie}</td>
   </tr>
 </table>
 

@@ -9,7 +9,38 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const user = await usermodel.find({ status: true });
+    const user = await usermodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "IDrole",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$roles", 0] }, "$$ROOT"],
+          },
+        },
+      },
+    ]);
     idUser = req.query.idUser;
     const userfind = await usermodel.findById(idUser);
     if (userfind) {
