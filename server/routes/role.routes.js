@@ -162,7 +162,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The role was updated successfully.",
         cont: {
-          Rolefind,
+          roleupdate,
         },
       });
     }

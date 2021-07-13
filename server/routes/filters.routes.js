@@ -147,7 +147,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The filters was updated successfully.",
         cont: {
-          filterfind,
+          filterupdate,
         },
       });
     }

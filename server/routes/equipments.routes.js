@@ -1,5 +1,6 @@
 const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
+const pdf = require("html-pdf");
 const app = express();
 
 app.get("/", async (req, res) => {
@@ -54,8 +55,11 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          $and: [{ tename: typeequipment }, { state: state }, { status: true }],
+          $and: [{ tename: typeequipment }, { status: true }],
         },
+      },
+      {
+        $sort: { state: -1},
       },
     ]);
     idEquipment = req.query.idEquipment;
@@ -160,6 +164,8 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.post("/pdf", async (req, res) => {});
+
 app.put("/", async (req, res) => {
   try {
     const idEquipment = req.query.idEquipment;
@@ -211,7 +217,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The equipment was update successfully.",
         cont: {
-          equipmentfind,
+          equipmentupdate,
         },
       });
     }
@@ -250,7 +256,7 @@ app.delete("/", async (req, res) => {
     }
     const equipmentupdate = await equipmentmodel.findByIdAndUpdate(
       idEquipment,
-      { $set: { status } },
+      { $set: { status: status } },
       { new: true }
     );
     if (!equipmentupdate) {
