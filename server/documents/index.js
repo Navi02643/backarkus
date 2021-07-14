@@ -1,4 +1,4 @@
-module.exports = ({ name, price1, price2, receiptId }) => {
+module.exports = ({ elemento, marca, modelo, serie }) => {
     const today = new Date();
 return `
 <!DOCTYPE html>
@@ -14,54 +14,21 @@ return `
 <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
 <p>Cuenta: MindTeams </p>
 <p style="text-align: center;">DESCRIPCIÓN </p>
-<table>
-    <thead>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </tbody>
+<table class="default">
+  <tr>
+    <th>Elemento</th>
+    <th>Marca</th>
+    <th>Modelo</th>
+    <th>No. de Serie</th>
+  </tr>
+  <tr>
+    <td>${elemento}</td>
+    <td>${marca}</td>
+    <td>${modelo}</td>
+    <td>${serie}</td>
+  </tr>
 </table>
+
 <p style="text-align: center;">DECLARACIÓN</p>
 <p>Por medio de la presente declaro recibir lo anteriormente descrito, comprometiéndose a mantenerlo en el estado en el
     que lo recibo salvo el deterioro normal por su uso, cuidándolo como si él mismo fuera de mi propiedad, en el
