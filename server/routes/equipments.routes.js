@@ -59,7 +59,7 @@ app.get("/", async (req, res) => {
         },
       },
       {
-        $sort: { state: -1},
+        $sort: { state: -1 },
       },
     ]);
     idEquipment = req.query.idEquipment;
@@ -165,7 +165,8 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/pdf", async (req, res) => {});
-
+try {
+} catch (err) {}
 app.put("/", async (req, res) => {
   try {
     const idEquipment = req.query.idEquipment;
