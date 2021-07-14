@@ -1,4 +1,3 @@
-const hostname = "127.0.0.1";
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
