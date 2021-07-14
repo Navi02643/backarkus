@@ -61,8 +61,6 @@ app.use((req, res, next) => {
 });
 
 server = app.listen(process.env.PORT, () => {
-  console.log(
-    "[SERVER]".green,
-    `running at http://${hostname}:${process.env.port}`
-  );
+  console.log(`Our app is running on port ${ process.env.PORT }`);
+
 });
