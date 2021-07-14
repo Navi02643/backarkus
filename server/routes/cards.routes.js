@@ -23,7 +23,7 @@ app.post('/create-pdf', (req, res) => {
 });
  
 app.get('/fetch-pdf', (req, res) => {
-    res.sendFile(`${__dirname}/Carta-compromiso.pdf`);
+    res.sendFile(`/Carta-compromiso.pdf`);
 });
 
 module.exports = app;
