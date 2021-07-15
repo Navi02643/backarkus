@@ -13,7 +13,9 @@ var options = {
     },
   };
 
+
 app.post('/create-pdf', (req, res) => {
+    
     pdf.create(pdfTemplate(req.body), options).toFile('Carta-compromiso.pdf', (err) => {
         if(err) {
             res.send(Promise.reject());

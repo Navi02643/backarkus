@@ -274,7 +274,8 @@ app.post("/login", async (req, res) => {
            email: user.email,
            phonenumber: user.phonenumber,
            userprofile: user.userprofile,
-           account: user.account
+           account: user.account,
+           IDcampus: user.IDcampus
          };
  
          // SIGN TOKEN
@@ -294,7 +295,8 @@ app.post("/login", async (req, res) => {
                email: user.email,
                phonenumber: user.phonenumber,
                userprofile: user.userprofile,
-               account: user.account
+               account: user.account,
+               IDcampus: user.IDcampus
              });
            }
          );
