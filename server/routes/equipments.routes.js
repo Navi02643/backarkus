@@ -105,60 +105,6 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/equiuser", async (req, res) => {
-  try {
-    username = req.query.username;
-    lastname = req.query.lastname;
-    const equipment = await equipmentmodel.aggregate([
-     
-      {
-        $lookup: {
-          from: "typeequipments",
-          localField: "IDtypeequipment",
-          foreignField: "_id",
-          as: "typeequipments",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "IDuser",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
-          },
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
-          },
-        },
-      },
-      {
-        $match: {
-          $and: [{ username: username }, { lastname: lastname }],
-        },
-      },
-    ]);
-  } catch (err) {
-    res.status(500).send({
-      estatus: "500",
-      err: true,
-      msg: "Error getting equipments.",
-      cont: {
-        err: Object.keys(err).length === 0 ? err.message : err,
-      },
-    });
-  }
-});
-
 app.post("/", async (req, res) => {
   try {
     const equipment = new equipmentmodel(req.body);

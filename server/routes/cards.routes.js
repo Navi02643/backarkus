@@ -76,7 +76,9 @@ app.get('/assinged', async (req, res) => {
                   model: 1,
                   mark: 1,
                   serialnumber: 1,
-                  
+                  username: 1,
+                  lastname: 1,
+                  account: 1
               }
           }
         ]);
@@ -92,5 +94,12 @@ app.get('/assinged', async (req, res) => {
           },
         });
       }
+    
+    pdf.create(pdfTemplate(req.body), options).toFile(`Carta-compromiso${username+' '+lastname}.pdf`, (err) => {
+        if(err) {
+            res.send(Promise.reject());
+        }
+            res.send(Promise.resolve());
+    });
 });
 module.exports = app;

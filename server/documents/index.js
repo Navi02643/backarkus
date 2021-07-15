@@ -1,12 +1,24 @@
 module.exports = ({ equipment }) => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const mounth = today.getMonth();
-    const day = today.getDay();
-    const mounthsname = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const currentdate = `Aguascalientes, Ags a ${day} de ${mounthsname[mounth]} del año ${year}`;
+  const today = new Date();
+  const mounthsname = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
+  const currentdate = `Aguascalientes, Ags a ${today.getDate()} de ${
+    mounthsname[today.getMonth()]
+  } del año ${today.getFullYear()}`;
 
-return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +40,17 @@ return `
     <th>No. de Serie</th>
   </tr>
   <tr>
+<<<<<<< HEAD
     <td>${equipment.tename}</td>
     <td>${equipment.mark}</td>
     <td>${equipment.model}</td>
     <td>${equipment.serialnumber}</td>
+=======
+    <td>${equipment}</td>
+    <td>${equipment}</td>
+    <td>${equipment}</td>
+    <td>${equipment}</td>
+>>>>>>> ef3f0275a781b8ddd2a131c912bff3d9f8ddb7cc
   </tr>
 </table>
 
