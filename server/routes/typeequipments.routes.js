@@ -17,7 +17,7 @@ app.get("/", async (req, res) => {
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: typeequipmentfindbyname,
+          name: typeequipmentfind,
         },
       });
     }
@@ -164,7 +164,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The type equipment was updated successfully.",
         cont: {
-          typeequipmentupdate,
+          typeequipmentfind,
         },
       });
     }
@@ -192,7 +192,6 @@ app.delete("/", async (req, res) => {
     }
 
     idTypeEquipment = req.query.idTypeEquipment;
-    status = req.body.status;
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
@@ -204,12 +203,10 @@ app.delete("/", async (req, res) => {
         cont: typeequipmentfind,
       });
     }
-    const typeequipmentupdate = await Typeequipmentmodel.findByIdAndUpdate(
-      idTypeEquipment,
-      { $set: { status: status } },
-      { new: true }
+    const typeequipmentdelete = await Typeequipmentmodel.findByIdAndDelete(
+      typeequipmentfind
     );
-    if (!typeequipmentupdate) {
+    if (!typeequipmentdelete) {
       return res.status(400).json({
         ok: false,
         resp: 400,
@@ -222,7 +219,7 @@ app.delete("/", async (req, res) => {
         resp: 200,
         msg: `Success: the type equipment has been successfully removed.`,
         cont: {
-          typeequipmentupdate,
+          typeequipmentdelete,
         },
       });
     }

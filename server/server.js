@@ -1,4 +1,3 @@
-const hostname = "127.0.0.1";
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -60,9 +59,7 @@ app.use((req, res, next) => {
   });
 });
 
-server = app.listen(process.env.PORT, hostname, () => {
-  console.log(
-    "[SERVER]".green,
-    `running at http://${hostname}:${process.env.port}`
-  );
+server = app.listen(process.env.PORT, () => {
+  console.log(`Our app is running on port ${ process.env.PORT }`);
+
 });
