@@ -43,7 +43,7 @@ mongoose
   .then((resp) => {
     console.log(
       "[SERVER]".green,
-      `Base de datos ONLINE en ${process.env.URLDB}`
+      `Database ONLINE in ${process.env.URLDB}`
     );
   })
   .catch((err) => {
@@ -60,6 +60,7 @@ app.use((req, res, next) => {
 });
 
 server = app.listen(process.env.PORT, () => {
-  console.log(`Our app is running on port ${ process.env.PORT }`);
+
+  console.log("[SERVER]".green,`Our app is running on port ${ process.env.PORT }`);
 
 });
