@@ -1,5 +1,11 @@
-module.exports = ({ tename, mark, model, serialnumber }) => {
+module.exports = ({ equipment }) => {
     const today = new Date();
+    const year = today.getFullYear();
+    const mounth = today.getMonth();
+    const day = today.getDay();
+    const mounthsname = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const currentdate = `Aguascalientes, Ags a ${day} de ${mounthsname[mounth]} del año ${year}`;
+
 return `
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +16,7 @@ return `
     <title>Document</title>
 </head>
 <body>
-    <p style="text-align: right;">Aguascalientes, Ags a  </p>
+    <p style="text-align: right;"> ${currentdate}</p>
 <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
 <p>Cuenta: MindTeams </p>
 <p style="text-align: center;">DESCRIPCIÓN </p>
@@ -22,10 +28,10 @@ return `
     <th>No. de Serie</th>
   </tr>
   <tr>
-    <td>${tename}</td>
-    <td>${mark}</td>
-    <td>${model}</td>
-    <td>${serialnumber}</td>
+    <td>${equipment.tename}</td>
+    <td>${equipment.mark}</td>
+    <td>${equipment.model}</td>
+    <td>${equipment.serialnumber}</td>
   </tr>
 </table>
 

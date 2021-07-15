@@ -16,6 +16,19 @@ var options = {
 
 
 app.post('/create-pdf', async (req, res) => {
+    pdf.create(pdfTemplate(req.body), options).toFile('Carta-compromiso.pdf', (err) => {
+        if(err) {
+            res.send(Promise.reject());
+        }
+            res.send(Promise.resolve());
+    });
+});
+ 
+app.get('/fetch-pdf', (req, res) => {
+    res.sendFile(`${__dirname}/Carta-compromiso.pdf`);
+});
+
+app.get('/assinged', async (req, res) => {
     try {
         username = req.query.username;
         lastname = req.query.lastname;
@@ -62,12 +75,12 @@ app.post('/create-pdf', async (req, res) => {
                   tename: 1,
                   model: 1,
                   mark: 1,
-                  serialnumber: 1
+                  serialnumber: 1,
+                  
               }
           }
         ]);
         
-        equipment = JSONstringify(equipment);
         console.log(equipment);
       } catch (err) {
         res.status(500).send({
@@ -79,17 +92,5 @@ app.post('/create-pdf', async (req, res) => {
           },
         });
       }
-    
-    pdf.create(pdfTemplate(req.body), options).toFile('Carta-compromiso.pdf', (err) => {
-        if(err) {
-            res.send(Promise.reject());
-        }
-            res.send(Promise.resolve());
-    });
 });
- 
-app.get('/fetch-pdf', (req, res) => {
-    res.sendFile(`${__dirname}/Carta-compromiso.pdf`);
-});
-
 module.exports = app;
