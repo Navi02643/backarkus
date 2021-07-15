@@ -66,16 +66,17 @@ app.post("/", async (req, res) => {
         },
       });
     }
-    const typeequipmentfind = await Typeequipmentmodel.findOne({
+    const typeequipmentfind = await Typeequipmentmodel.find({
       tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
+    
     if (typeequipmentfind) {
       return res.status(400).json({
         ok: false,
         resp: 400,
         msg: "The type of equipment you are trying to register already exists",
         cont: {
-          tename: typeequipmentfind.tename,
+          tename: typeequipmentfind,
         },
       });
     }

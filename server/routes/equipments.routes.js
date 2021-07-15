@@ -55,11 +55,11 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          $and: [{ tename: typeequipment }],
+          $and: [{ tename: typeequipment }, { status: true }],
         },
       },
       {
-        $sort: { state: -1, status: -1 },
+        $sort: { state: -1 },
       },
     ]);
     idEquipment = req.query.idEquipment;
@@ -339,7 +339,7 @@ app.delete("/", async (req, res) => {
     }
     const equipmentupdate = await equipmentmodel.findByIdAndUpdate(
       idEquipment,
-      { $set: { status: status } },
+      { $set: { status: status, state: "Fuera de servicio" } },
       { new: true }
     );
     if (!equipmentupdate) {
