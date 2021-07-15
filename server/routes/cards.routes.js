@@ -1,4 +1,3 @@
-const equipmentmodel = require("../models/equipments.model");
 const express = require('express');
 const pdf = require('html-pdf');
 const pdfTemplate = require('../documents');
@@ -16,7 +15,6 @@ var options = {
 
 
 app.post('/create-pdf', async (req, res) => {
-
     pdf.create(pdfTemplate(req.body), options).toFile(`Carta-compromiso${username+' '+lastname}.pdf`, (err) => {
         if(err) {
             res.send(Promise.reject());
@@ -24,9 +22,4 @@ app.post('/create-pdf', async (req, res) => {
             res.send(Promise.resolve());
     });
 });
- 
-app.get('/fetch-pdf', (req, res) => {
-    res.sendFile(`${__dirname}/Carta-compromiso.pdf`);
-});
-
 module.exports = app;

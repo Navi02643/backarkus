@@ -40,10 +40,10 @@ module.exports = ({ equipment }) => {
     <th>No. de Serie</th>
   </tr>
   <tr>
-    <td>${equipment}</td>
-    <td>${equipment}</td>
-    <td>${equipment}</td>
-    <td>${equipment}</td>
+    <td>${equipment.tename}</td>
+    <td>${equipment.mark}</td>
+    <td>${equipment.model}</td>
+    <td>${equipment.serialnumber}</td>
   </tr>
 </table>
 
