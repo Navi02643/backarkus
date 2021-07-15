@@ -60,7 +60,7 @@ app.get("/", async (req, res) => {
         },
       },
       {
-        $sort: { state: -1, status: -1 },
+        $sort: { state: -1 },
       },
     ]);
     idEquipment = req.query.idEquipment;
