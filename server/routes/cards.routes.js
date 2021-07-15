@@ -67,8 +67,8 @@ app.post('/create-pdf', async (req, res) => {
           }
         ]);
         
-        // tename = equipment.tename;
-        console.log(card);
+        equipment = JSONstringify(equipment);
+        console.log(equipment);
       } catch (err) {
         res.status(500).send({
           estatus: "500",
