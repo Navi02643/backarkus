@@ -1,4 +1,4 @@
-module.exports = ({ tename, mark, model, serialnumber }) => {
+module.exports = ({ equipment }) => {
     const today = new Date();
     const year = today.getFullYear();
     const mounth = today.getMonth();
