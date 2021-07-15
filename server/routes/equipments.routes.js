@@ -162,37 +162,6 @@ app.get("/equiuser", async (req, res) => {
         },
       },
     ]);
-    idEquipment = req.query.idEquipment;
-    const equipmentfind = await equipmentmodel.findById(idEquipment);
-    if (equipmentfind) {
-      return res.status(400).json({
-        estatus: "200",
-        err: false,
-        msg: "Information obtained correctly.",
-        cont: {
-          name: equipmentfind,
-        },
-      });
-    }
-    if (equipment.length <= 0) {
-      res.status(404).send({
-        estatus: "404",
-        err: true,
-        msg: "No equipments were found in the database.",
-        cont: {
-          equipment,
-        },
-      });
-    } else {
-      res.status(200).send({
-        estatus: "200",
-        err: false,
-        msg: "Information obtained correctly.",
-        cont: {
-          equipment,
-        },
-      });
-    }
   } catch (err) {
     res.status(500).send({
       estatus: "500",
