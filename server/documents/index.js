@@ -1,4 +1,4 @@
-module.exports = ({ }) => {
+module.exports = ({ tename, mark, model, serialnumber }) => {
     const today = new Date();
     const year = today.getFullYear();
     const mounth = today.getMonth();
@@ -28,10 +28,10 @@ return `
     <th>No. de Serie</th>
   </tr>
   <tr>
-    <td>${name}</td>
-    <td>${marca}</td>
-    <td>${modelo}</td>
-    <td>${serie}</td>
+    <td>${tename}</td>
+    <td>${mark}</td>
+    <td>${model}</td>
+    <td>${serialnumber}</td>
   </tr>
 </table>
 
