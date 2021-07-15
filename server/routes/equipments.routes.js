@@ -164,8 +164,6 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.post("/pdf", async (req, res) => {});
-
 app.put("/", async (req, res) => {
   try {
     const idEquipment = req.query.idEquipment;
