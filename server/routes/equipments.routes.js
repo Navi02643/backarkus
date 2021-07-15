@@ -164,12 +164,6 @@ app.post("/", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
-app.post("/pdf", async (req, res) => {});
-try {
-} catch (err) {}
->>>>>>> 15a3bb54290f1e6a0206ee878f53739067dcfffb
 app.put("/", async (req, res) => {
   try {
     const idEquipment = req.query.idEquipment;
