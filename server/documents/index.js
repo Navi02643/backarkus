@@ -1,4 +1,4 @@
-module.exports = ({ name, marca, modelo, serie }) => {
+module.exports = ({ tename, mark, model, serialnumber }) => {
     const today = new Date();
 return `
 <!DOCTYPE html>
@@ -22,10 +22,10 @@ return `
     <th>No. de Serie</th>
   </tr>
   <tr>
-    <td>${name}</td>
-    <td>${marca}</td>
-    <td>${modelo}</td>
-    <td>${serie}</td>
+    <td>${tename}</td>
+    <td>${mark}</td>
+    <td>${model}</td>
+    <td>${serialnumber}</td>
   </tr>
 </table>
 

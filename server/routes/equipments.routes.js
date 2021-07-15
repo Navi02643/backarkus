@@ -1,6 +1,5 @@
 const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
-const pdf = require("html-pdf");
 const app = express();
 
 app.get("/", async (req, res) => {
@@ -56,7 +55,7 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          $and: [{ tename: typeequipment }],
+          $and: [{ tename: typeequipment }, { status: true }],
         },
       },
       {
@@ -111,14 +110,7 @@ app.get("/equiuser", async (req, res) => {
     username = req.query.username;
     lastname = req.query.lastname;
     const equipment = await equipmentmodel.aggregate([
-      {
-        $lookup: {
-          from: "campus",
-          localField: "IDcampus",
-          foreignField: "_id",
-          as: "campus",
-        },
-      },
+     
       {
         $lookup: {
           from: "typeequipments",
@@ -133,13 +125,6 @@ app.get("/equiuser", async (req, res) => {
           localField: "IDuser",
           foreignField: "_id",
           as: "user",
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
-          },
         },
       },
       {
@@ -354,7 +339,7 @@ app.delete("/", async (req, res) => {
     }
     const equipmentupdate = await equipmentmodel.findByIdAndUpdate(
       idEquipment,
-      { $set: { status: status } },
+      { $set: { status: status, state: "Fuera de servicio" } },
       { new: true }
     );
     if (!equipmentupdate) {
