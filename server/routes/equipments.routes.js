@@ -158,7 +158,7 @@ app.get("/equiuser", async (req, res) => {
       },
       {
         $match: {
-          $and: [{ username: username },],
+          $and: [{ username: username }, { lastname: lastname }],
         },
       },
     ]);
