@@ -71,7 +71,7 @@ app.get("/generateReport", async (req, res) => {
           format: "A4",
           border: {
             top: "2.54cm",
-            button: "1.54cm",
+            button: "2.00cm",
             right: "2.54cm",
             left: "2.54cm",
           },
