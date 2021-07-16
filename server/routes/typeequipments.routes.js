@@ -1,4 +1,4 @@
-const Typeequipmentmodel = require("../models/typeequipment.model");
+const Typeequipmentmodel = require("./typeequipment.model");
 const express = require("express");
 const app = express();
 
@@ -10,7 +10,6 @@ app.get("/", async (req, res) => {
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
-    // const typeequipmentfind = await Typeequipmentmodel.find( {tename} );
     if (typeequipmentfind) {
       return res.status(400).json({
         estatus: "200",
@@ -66,10 +65,10 @@ app.post("/", async (req, res) => {
         },
       });
     }
-    const typeequipmentfind = await Typeequipmentmodel.find({
+    const typeequipmentfind = await Typeequipmentmodel.findOne({
       tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
-    
+    console.log(typeequipmentfind);
     if (typeequipmentfind) {
       return res.status(400).json({
         ok: false,
