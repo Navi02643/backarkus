@@ -1,3 +1,9 @@
+// Fetch('http://localhost:5000/api/cards/assigned')
+
+// fetch('http://localhost:5000/api/cards/assigned')
+// .then(response => response.json())
+// .then(json => console.log(json))
+
 module.exports = ({ equipment }) => {
   const today = new Date();
   const mounthsname = [
@@ -40,17 +46,10 @@ module.exports = ({ equipment }) => {
     <th>No. de Serie</th>
   </tr>
   <tr>
-<<<<<<< HEAD
-    <td>${equipment.tename}</td>
-    <td>${equipment.mark}</td>
-    <td>${equipment.model}</td>
-    <td>${equipment.serialnumber}</td>
-=======
     <td>${equipment}</td>
     <td>${equipment}</td>
     <td>${equipment}</td>
     <td>${equipment}</td>
->>>>>>> ef3f0275a781b8ddd2a131c912bff3d9f8ddb7cc
   </tr>
 </table>
 
@@ -89,7 +88,12 @@ module.exports = ({ equipment }) => {
         <td style=" padding: 5%;"></td>
         <td style=" padding: 5%;"></td>
     </tr>
+    <tr>
+        <td class="title"><img  src="/server/logo.png"
+        style="width:100%; max-width:156px;"></td>
+    </tr>
 </table>
+
 
 </body>
 </html>

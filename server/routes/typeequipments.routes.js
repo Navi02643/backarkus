@@ -6,7 +6,7 @@ app.get("/", async (req, res) => {
   try {
     const typeequipment = await Typeequipmentmodel.find({ status: true });
     idTypeEquipment = req.query.idTypeEquipment;
-    tename = req.query.tename;
+    // tename = req.query.tename;
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
@@ -66,7 +66,7 @@ app.post("/", async (req, res) => {
         },
       });
     }
-    const typeequipmentfind = await Typeequipmentmodel.find({
+    const typeequipmentfind = await Typeequipmentmodel.findOne({
       tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
     
