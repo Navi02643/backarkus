@@ -105,6 +105,74 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/user", async (req, res) => {
+  try {
+    email = req.query.email;
+    const equipment = await equipmentmodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "typeequipments",
+          localField: "IDtypeequipment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ email: email },],
+        },
+      },
+    ]);
+    console.log(equipment);
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting equipments.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 app.post("/", async (req, res) => {
   try {
     const equipment = new equipmentmodel(req.body);
