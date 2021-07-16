@@ -59,7 +59,6 @@ app.get("/generateReport", async (req, res) => {
       },
     },
   ]);
-  console.log(equipment);
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
     { equipment: equipment },
@@ -70,13 +69,14 @@ app.get("/generateReport", async (req, res) => {
         let options = {
           format: "A4",
           border: {
-            top: "2.54cm",
-            button: "2.00cm",
+            top: "2.00cm",
             right: "2.54cm",
             left: "2.54cm",
+            bottom: "2.20cm",
           },
         };
-        pdf.create(data, options).toFile(`./docgenerate/report.pdf`, function (err, data) {
+        
+        pdf.create(data, options).toFile(`./server/docgenerate/reporte.pdf`, function (err, data) {
           if (err) {
             res.send(err);
           } else {
