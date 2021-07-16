@@ -59,7 +59,6 @@ app.get("/generateReport", async (req, res) => {
       },
     },
   ]);
-  console.log(equipment);
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
     { equipment: equipment },
@@ -71,18 +70,24 @@ app.get("/generateReport", async (req, res) => {
           format: "A4",
           border: {
             top: "2.54cm",
-            button: "2.00cm",
             right: "2.54cm",
             left: "2.54cm",
+            bottom: "2.00cm",
           },
         };
-        pdf.create(data, options).toFile(`./docgenerate/report.pdf`, function (err, data) {
-          if (err) {
-            res.send(err);
-          } else {
-            res.send("File created successfully");
-          }
-        });
+        pdf
+          .create(data, options)
+          .toFile(`./server/docgenerate/report.pdf`, function (err, data) {
+            if (err) {
+              res.send(err);
+            } else {
+              res.status(400).json({
+                estatus: "200",
+                err: false,
+                msg: "document generated successfully.",
+              });
+            }
+          });
       }
     }
   );
