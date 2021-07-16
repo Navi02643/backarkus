@@ -69,7 +69,7 @@ app.post("/", async (req, res) => {
     const typeequipmentfind = await Typeequipmentmodel.findOne({
       tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
-    
+    console.log(typeequipmentfind);
     if (typeequipmentfind) {
       return res.status(400).json({
         ok: false,
