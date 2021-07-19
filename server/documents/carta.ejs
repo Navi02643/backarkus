@@ -11,118 +11,120 @@
 <body>
     <% if (equipment) { %>
         <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric' ,
-                month: 'long' , day: '2-digit' }).format(new Date()) %>
+                month: 'numeric' , day: '2-digit' }).format(new Date()) %>
         </p>
         <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
-        <p>Cuenta: <%= $equipment.account %>
-        </p>
+        <% equipment.find(equipment=> {%>
+            <p>Cuenta: <%= equipment.account %>
+            </p>
+            <% });%>
 
-        <p style="text-align: center;">DESCRIPCIÓN </p>
-        <table style="margin-left: auto; margin-right: auto; border-collapse: collapse;width: 100%;">
-            <tr style=" border: solid 1px black;">
-                <th style="border: 1px solid black; text-align: center;">Elemento</th>
-                <th style="border: 1px solid black; text-align: center;">Marca</th>
-                <th style="border: 1px solid black; text-align: center;">Modelo</th>
-                <th style="border: 1px solid black; text-align: center;">No. de Serie</th>
-            </tr>
-            <% equipment.forEach(equipment=> {%>
-                <tr style="border: solid 1px black;">
-                    <td style="border: 1px solid black; text-align: center;">
-                        <%= equipment.tename %>
-                    </td>
-                    <td style="border: 1px solid black; text-align: center;">
-                        <%= equipment.mark %>
-                    </td>
-                    <td style="border: 1px solid black; text-align: center;">
-                        <%= equipment.model %>
-                    </td>
-                    <td style="border: 1px solid black; text-align: center;">
-                        <%= equipment.serialnumber %>
-                    </td>
-                </tr>
-                <% });%>
-        </table>
-        <p style="text-align: center;">DECLARACIÓN</p>
-        <p style="text-align: justify">Por medio de la presente declaro recibir lo anteriormente descrito,
-            comprometiéndose a mantenerlo en el
-            estado en
-            el
-            que lo recibo salvo el deterioro normal por su uso, cuidándolo como si él mismo fuera de mi
-            propiedad,
-            en el
-            entendido de que en caso de que el mismo se pierda o sufra cualquier daño ocasionado por su dolo o
-            negligencia,
-            me
-            haré responsable del costo de sustitución o reparación del mismo.</p>
-        <p style="text-align: justify">En caso de que por causas inherentes al uso y desgaste normales del
-            equipo este requiera alguna
-            reparación,
-            el
-            colaborador notificará tal circunstancia a la empresa, para que la misma indique las condiciones en
-            la
-            que
-            las
-            reparaciones o trabajo de mantenimiento sobre el mismo habrán de realizarse.</p>
-        <p style="text-align: justify">El colaborador reconoce que el equipo que se le entrega, sólo podrá ser
-            utilizado para cumplir con las
-            tareas
-            que
-            le
-            encomienda la empresa y que no podrá hacer uso del mismo para cuestiones de carácter personal.
-            Asimismo
-            se
-            compromete a emplear el equipo únicamente de acuerdo con las condiciones y especificaciones que para
-            dichos
-            efectos
-            haga de su conocimiento la empresa.</p>
-        <p style="text-align: justify">En caso de tratarse de equipo de cómputo, se compromete a no cambiarlo de
-            lugar, ni modificarlo ni en el
-            hardware
-            ni
-            en el software, es decir no agregar ni suprimir ningún programa de los que se encuentren cargados
-            originalmente
-            o
-            que sean adicionados posteriormente por el personal autorizado de la empresa, sin el expreso
-            consentimiento
-            por
-            escrito de esta.</p>
-        <p style="text-align: justify">El colaborador reconoce que los derechos sobre el equipo objeto de la
-            presente corresponden
-            exclusivamente a
-            la
-            empresa, por lo que se obliga a devolver el equipo a la empresa en caso de terminar su relación
-            laboral,
-            deberá
-            de
-            entregar los equipos, accesorios o cualquier dispositivo que se le haya entregado al personal de IT
-            en
-            el
-            mismo
-            estado en que los haya recibido, salvo el deterioro que presente al momento de la entrega debido al
-            uso
-            normal y
-            correcto, si se encontrase trabajando fuera del estado o país, el colaborador asumirá el costo del
-            envío
-            de
-            los
-            equipos, accesorios o dispositivos que se le hayan entregado a la oficina de Arkusnexus. </p>
-        <table style="margin-left: auto; margin-right: auto;width: 100%; padding: 5%">
-            <tr style="column-width: 50%; padding: 25%">
-                <td style=" padding: 5%; text-align: center;">COLABORADOR</td>
-                <td style=" padding: 5%; text-align: center;">AUTORIZACIÓN DE IT</td>
-            </tr>
-            <tr style="column-width: 50%; padding: 25%">
-                <td style="border-top: 1px solid black; text-align: center;">
-                    <%= equipment.username %>
-                        <%= equipment.lastname %>
-                </td>
-                <td style="border-top: 1px solid black; text-align: center;">
-                    <%= equipment.username %>
-                        <%= equipment.lastname %>
-                </td>
-            </tr>
-        </table>
-        <% }%>
+                <p style="text-align: center;">DESCRIPCIÓN </p>
+                <table style="margin-left: auto; margin-right: auto; border-collapse: collapse;width: 100%;">
+                    <tr style=" border: solid 1px black;">
+                        <th style="border: 1px solid black; text-align: center;">Elemento</th>
+                        <th style="border: 1px solid black; text-align: center;">Marca</th>
+                        <th style="border: 1px solid black; text-align: center;">Modelo</th>
+                        <th style="border: 1px solid black; text-align: center;">No. de Serie</th>
+                    </tr>
+                    <% equipment.forEach(equipment=> {%>
+                        <tr style="border: solid 1px black;">
+                            <td style="border: 1px solid black; text-align: center;">
+                                <%= equipment.tename %>
+                            </td>
+                            <td style="border: 1px solid black; text-align: center;">
+                                <%= equipment.mark %>
+                            </td>
+                            <td style="border: 1px solid black; text-align: center;">
+                                <%= equipment.model %>
+                            </td>
+                            <td style="border: 1px solid black; text-align: center;">
+                                <%= equipment.serialnumber %>
+                            </td>
+                        </tr>
+                        <% });%>
+                </table>
+                <p style="text-align: center;">DECLARACIÓN</p>
+                <p style="text-align: justify">Por medio de la presente declaro recibir lo anteriormente descrito,
+                    comprometiéndose a mantenerlo en el
+                    estado en
+                    el
+                    que lo recibo salvo el deterioro normal por su uso, cuidándolo como si él mismo fuera de mi
+                    propiedad,
+                    en el
+                    entendido de que en caso de que el mismo se pierda o sufra cualquier daño ocasionado por su dolo o
+                    negligencia,
+                    me
+                    haré responsable del costo de sustitución o reparación del mismo.</p>
+                <p style="text-align: justify">En caso de que por causas inherentes al uso y desgaste normales del
+                    equipo este requiera alguna
+                    reparación,
+                    el
+                    colaborador notificará tal circunstancia a la empresa, para que la misma indique las condiciones en
+                    la
+                    que
+                    las
+                    reparaciones o trabajo de mantenimiento sobre el mismo habrán de realizarse.</p>
+                <p style="text-align: justify">El colaborador reconoce que el equipo que se le entrega, sólo podrá ser
+                    utilizado para cumplir con las
+                    tareas
+                    que
+                    le
+                    encomienda la empresa y que no podrá hacer uso del mismo para cuestiones de carácter personal.
+                    Asimismo
+                    se
+                    compromete a emplear el equipo únicamente de acuerdo con las condiciones y especificaciones que para
+                    dichos
+                    efectos
+                    haga de su conocimiento la empresa.</p>
+                <p style="text-align: justify">En caso de tratarse de equipo de cómputo, se compromete a no cambiarlo de
+                    lugar, ni modificarlo ni en el
+                    hardware
+                    ni
+                    en el software, es decir no agregar ni suprimir ningún programa de los que se encuentren cargados
+                    originalmente
+                    o
+                    que sean adicionados posteriormente por el personal autorizado de la empresa, sin el expreso
+                    consentimiento
+                    por
+                    escrito de esta.</p>
+                <p style="text-align: justify">El colaborador reconoce que los derechos sobre el equipo objeto de la
+                    presente corresponden
+                    exclusivamente a
+                    la
+                    empresa, por lo que se obliga a devolver el equipo a la empresa en caso de terminar su relación
+                    laboral,
+                    deberá
+                    de
+                    entregar los equipos, accesorios o cualquier dispositivo que se le haya entregado al personal de IT
+                    en
+                    el
+                    mismo
+                    estado en que los haya recibido, salvo el deterioro que presente al momento de la entrega debido al
+                    uso
+                    normal y
+                    correcto, si se encontrase trabajando fuera del estado o país, el colaborador asumirá el costo del
+                    envío
+                    de
+                    los
+                    equipos, accesorios o dispositivos que se le hayan entregado a la oficina de Arkusnexus. </p>
+                <table style="margin-left: auto; margin-right: auto;width: 100%; padding: 5%">
+                    <tr style="column-width: 50%; padding: 25%">
+                        <td style=" padding: 5%; text-align: center;">COLABORADOR</td>
+                        <td style=" padding: 5%; text-align: center;">AUTORIZACIÓN DE IT</td>
+                    </tr>
+                    <tr style="column-width: 50%; padding: 25%">
+                        <td style="border-top: 1px solid black; text-align: center;">
+                            <%= equipment.username %>
+                                <%= equipment.lastname %>
+                        </td>
+                        <td style="border-top: 1px solid black; text-align: center;">
+                            <%= equipment.username %>
+                                <%= equipment.lastname %>
+                        </td>
+                    </tr>
+                </table>
+                <% }%>
 </body>
 
 </html>

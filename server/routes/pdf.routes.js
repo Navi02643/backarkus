@@ -59,7 +59,7 @@ app.get("/generateReport", async (req, res) => {
       },
     },
   ]);
-  ejs.renderFile(
+   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
     { equipment: equipment },
     (err, data) => {
