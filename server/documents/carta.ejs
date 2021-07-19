@@ -10,7 +10,7 @@
 
 <body>
     <% if (equipment) { %>
-        <p>Cuenta: <%= equipment.account%>
+        <p>Cuenta: <%= equipment.account %>
         </p>
         <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric' ,
                 month: 'long' , day: '2-digit' }).format(new Date()) %>

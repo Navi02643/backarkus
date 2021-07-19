@@ -57,10 +57,11 @@ app.post("/generateReport", async (req, res) => {
     {
       $match: {
         $and: [{ email: email }],
-      },
+      },                                                          
     },
   ]);
   console.log(equipment)
+  console.log(equipment.account)
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
     { equipment: equipment },
@@ -100,34 +101,34 @@ app.post("/generateReport", async (req, res) => {
 
     // //////////////////////////SEND EMAIL/////////////////////////////////
 
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-          user: 'salas.flores.1dm@gmail.com',
-          pass: ' vstktifqwoigrsvi'
-      },
-      tls: {
-          rejectUnauthorized: false
-      }
-    });
+    // let transporter = nodemailer.createTransport({
+    //   host: 'smtp.gmail.com',
+    //   port: 465,
+    //   secure: true,
+    //   auth: {
+    //       user: 'salas.flores.1dm@gmail.com',
+    //       pass: ' vstktifqwoigrsvi'
+    //   },
+    //   tls: {
+    //       rejectUnauthorized: false
+    //   }
+    // });
 
-    let info = await transporter.sendMail({
-      from: '"ArkusNexus Inventory" <salas.flores.1dm@gmail.com>',
-      to: email,
-      subject: 'Commitment letter',
-      text: 'Hello, the following commitment letter contains the teams currently assigned',
-      attachments: [
-        { 
-          filename: 'Carta-Compromiso.pdf', 
-          path: __dirname + '/public/Carta-compromiso.pdf', 
-          contentType: 'application/pdf' 
-        }
-      ]
-    })
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    // let info = await transporter.sendMail({
+    //   from: '"ArkusNexus Inventory" <salas.flores.1dm@gmail.com>',
+    //   to: email,
+    //   subject: 'Commitment letter',
+    //   text: 'Hello, the following commitment letter contains the teams currently assigned',
+    //   attachments: [
+    //     { 
+    //       filename: 'Carta-Compromiso.pdf', 
+    //       path: __dirname + '/public/Carta-compromiso.pdf', 
+    //       contentType: 'application/pdf' 
+    //     }
+    //   ]
+    // })
+    // console.log('Message sent: %s', info.messageId);
+    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
 
 });
