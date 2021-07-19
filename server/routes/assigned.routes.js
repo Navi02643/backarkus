@@ -23,6 +23,14 @@ app.get("/", async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "IT",
+          localField: "assignedby",
+          foreignField: "_id",
+          as: "IT",
+        },
+      },
+      {
         $replaceRoot: {
           newRoot: {
             $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
@@ -36,6 +44,18 @@ app.get("/", async (req, res) => {
           },
         },
       },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ email: email }],
+        },
+      }
     ]);
     idAssigned = req.query.idAssigned;
     const assignedfind = await assignedmodel.findById(idAssigned);

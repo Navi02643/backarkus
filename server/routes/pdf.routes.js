@@ -10,47 +10,52 @@ app.get("/generateReport", async (req, res) => {
   const equipment = await equipmentmodel.aggregate([
     {
       $lookup: {
-        from: "campus",
-        localField: "IDcampus",
-        foreignField: "_id",
-        as: "campus",
-      },
-    },
-    {
-      $lookup: {
-        from: "typeequipments",
-        localField: "IDtypeequipment",
-        foreignField: "_id",
-        as: "typeequipments",
-      },
-    },
-    {
-      $lookup: {
         from: "users",
         localField: "IDuser",
         foreignField: "_id",
-        as: "user",
+        as: "users",
+      },
+    },
+    {
+      $lookup: {
+        from: "equipment",
+        localField: "serialnumber",
+        foreignField: "_id",
+        as: "equipment",
+      },
+    },
+    {
+      $lookup: {
+        from: "IT",
+        localField: "assignedby",
+        foreignField: "_id",
+        as: "IT",
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
         },
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$equipment", 0] }, "$$ROOT"],
         },
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
         },
+      },
+    },
+    {
+      $match: {
+        $and: [{ email: email }],
       },
     },
     {

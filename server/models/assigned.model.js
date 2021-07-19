@@ -14,8 +14,8 @@ const assignedSchema = new Schema({
   },
   assignedby: {
     type: Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "The IDuser is required"],
+    ref: "IT",
+    required: [true, "The ITIDuser is required"],
   },
   status: {
     type: Boolean,

@@ -10,5 +10,6 @@ app.use("/waiting", require("./waiting.routes"));
 app.use("/filters", require("./filters.routes"));
 app.use("/pdf",require("./pdf.routes"));
 app.use("/assigned",require("./assigned.routes"));
+app.use("/IT", require("./IT.routes"));
 
 module.exports = app;
