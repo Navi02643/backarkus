@@ -20,22 +20,22 @@ app.post("/generateReport", async (req, res) => {
     {
       $lookup: {
         from: "equipment",
-        localField: "serialnumber",
+        localField: "IDequipment",
         foreignField: "_id",
         as: "equipment",
       },
     },
     {
       $lookup: {
-        from: "typeequipment",
-        localField: "serialnumber",
+        from: "typeequipments",
+        localField: "IDtypeequipment",
         foreignField: "_id",
-        as: "typeequipment",
+        as: "typeequipments",
       },
     },
     {
       $lookup: {
-        from: "IT",
+        from: "its",
         localField: "assignedby",
         foreignField: "_id",
         as: "IT",
@@ -58,14 +58,14 @@ app.post("/generateReport", async (req, res) => {
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
         },
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$typeequipment", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
         },
       },
     },

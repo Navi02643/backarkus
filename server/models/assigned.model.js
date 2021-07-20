@@ -12,7 +12,7 @@ const assignedSchema = new Schema({
     ref: "Equipment",
     required: [true, "The IDequipment is required"],
   },
-  typeequipment: {
+  IDtypeequipment: {
     type: Schema.Types.ObjectId,
     ref: "Typeequipment",
     required: [true, "The Typeequipment is required"],

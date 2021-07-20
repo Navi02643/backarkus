@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 
 app.get("/", async (req, res) => {
+  email = req.query.email;
   try {
     const assigned = await assignedmodel.aggregate([
       {
@@ -17,14 +18,22 @@ app.get("/", async (req, res) => {
       {
         $lookup: {
           from: "equipment",
-          localField: "serialnumber",
+          localField: "IDequipment",
           foreignField: "_id",
           as: "equipment",
         },
       },
       {
         $lookup: {
-          from: "IT",
+          from: "typeequipments",
+          localField: "IDtypeequipment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $lookup: {
+          from: "its",
           localField: "assignedby",
           foreignField: "_id",
           as: "IT",
@@ -47,6 +56,13 @@ app.get("/", async (req, res) => {
       {
         $replaceRoot: {
           newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
             $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
           },
         },
@@ -54,8 +70,8 @@ app.get("/", async (req, res) => {
       {
         $match: {
           $and: [{ email: email }],
-        },
-      }
+        },                                                          
+      },
     ]);
     idAssigned = req.query.idAssigned;
     const assignedfind = await assignedmodel.findById(idAssigned);
