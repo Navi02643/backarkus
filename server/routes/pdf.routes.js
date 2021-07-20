@@ -11,46 +11,46 @@ app.post("/generateReport", async (req, res) => {
   const equipment = await equipmentmodel.aggregate([
     {
       $lookup: {
-        from: "campus",
-        localField: "IDcampus",
-        foreignField: "_id",
-        as: "campus",
-      },
-    },
-    {
-      $lookup: {
-        from: "typeequipments",
-        localField: "IDtypeequipment",
-        foreignField: "_id",
-        as: "typeequipments",
-      },
-    },
-    {
-      $lookup: {
         from: "users",
         localField: "IDuser",
         foreignField: "_id",
-        as: "user",
+        as: "users",
+      },
+    },
+    {
+      $lookup: {
+        from: "equipment",
+        localField: "serialnumber",
+        foreignField: "_id",
+        as: "equipment",
+      },
+    },
+    {
+      $lookup: {
+        from: "IT",
+        localField: "assignedby",
+        foreignField: "_id",
+        as: "IT",
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
         },
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$equipment", 0] }, "$$ROOT"],
         },
       },
     },
     {
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
         },
       },
     },
@@ -60,8 +60,7 @@ app.post("/generateReport", async (req, res) => {
       },                                                          
     },
   ]);
-  console.log(equipment)
-  console.log(equipment.account)
+
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
     { equipment: equipment },
@@ -101,34 +100,34 @@ app.post("/generateReport", async (req, res) => {
 
     // //////////////////////////SEND EMAIL/////////////////////////////////
 
-    // let transporter = nodemailer.createTransport({
-    //   host: 'smtp.gmail.com',
-    //   port: 465,
-    //   secure: true,
-    //   auth: {
-    //       user: 'salas.flores.1dm@gmail.com',
-    //       pass: ' vstktifqwoigrsvi'
-    //   },
-    //   tls: {
-    //       rejectUnauthorized: false
-    //   }
-    // });
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+          user: 'arkusnexus.inventory@gmail.com',
+          pass: ' cnfjtmiridqbsnnb'
+      },
+      tls: {
+          rejectUnauthorized: false
+      }
+    });
 
-    // let info = await transporter.sendMail({
-    //   from: '"ArkusNexus Inventory" <salas.flores.1dm@gmail.com>',
-    //   to: email,
-    //   subject: 'Commitment letter',
-    //   text: 'Hello, the following commitment letter contains the teams currently assigned',
-    //   attachments: [
-    //     { 
-    //       filename: 'Carta-Compromiso.pdf', 
-    //       path: __dirname + '/public/Carta-compromiso.pdf', 
-    //       contentType: 'application/pdf' 
-    //     }
-    //   ]
-    // })
-    // console.log('Message sent: %s', info.messageId);
-    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    let info = await transporter.sendMail({
+      from: '"ArkusNexus Inventory" <arkusnexus.inventory@gmail.com>',
+      to: email,
+      subject: 'Commitment letter',
+      text: 'Hello, the following commitment letter contains the teams currently assigned',
+      attachments: [
+        { 
+          filename: 'Carta-Compromiso.pdf', 
+          path: __dirname + '/public/Carta-compromiso.pdf', 
+          contentType: 'application/pdf' 
+        }
+      ]
+    })
+    console.log('E-mail sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
 
 });

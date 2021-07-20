@@ -10,16 +10,15 @@
 
 <body>
     <% if (equipment) { %>
-        <p>Cuenta: <%= equipment.account %>
-        </p>
+       
         <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric' ,
-                month: 'long' , day: '2-digit' }).format(new Date()) %>
+                month: 'numeric' , day: '2-digit' }).format(new Date()) %>
         </p>
         <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
-        <% equipment.forEach(equipment=> {%>
-        <p>Cuenta: <%= equipment.account %>
+       
+        <p>Cuenta: <%= equipment[0].account %>
         </p>
-        <% });%>
+   
 
         <p style="text-align: center;">DESCRIPCIÓN </p>
         <table style="margin-left: auto; margin-right: auto; border-collapse: collapse;width: 100%;">
@@ -119,8 +118,8 @@
             </tr>
             <tr style="column-width: 50%; padding: 25%">
                 <td style="border-top: 1px solid black; text-align: center;">
-                    <%= equipment.username %>
-                        <%= equipment.lastname %>
+                    <%= equipment[0].username %>
+                        <%= equipment[0].lastname %>
                 </td>
                 <td></td>
                 <td style="border-top: 1px solid black; text-align: center;">
