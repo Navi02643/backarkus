@@ -75,6 +75,25 @@ app.post("/generateReport", async (req, res) => {
       },                                                          
     },
   ]);
+  if (equipment.length <= 0) {
+    res.status(404).send({
+      estatus: "404",
+      err: true,
+      msg: "No assigned were found in the database.",
+      cont: {
+        equipment,
+      },
+    });
+  } else {
+    res.status(200).send({
+      estatus: "200",
+      err: false,
+      msg: "Information obtained correctly.",
+      cont: {
+        equipment,
+      },
+    });
+  }
 
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
