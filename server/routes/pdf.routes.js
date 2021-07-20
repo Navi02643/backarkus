@@ -1,4 +1,4 @@
-const equipmentmodel = require("../models/equipments.model");
+const equipmentmodel = require("../models/assigned.model");
 const express = require("express");
 let ejs = require("ejs");
 let pdf = require("html-pdf");
