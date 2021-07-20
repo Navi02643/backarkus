@@ -7,10 +7,15 @@ const assignedSchema = new Schema({
     ref: "User",
     required: [true, "The IDuser is required"],
   },
-  serialnumber: {
+  IDequipment: {
     type: Schema.Types.ObjectId,
     ref: "Equipment",
-    required: [true, "The serial number is required"],
+    required: [true, "The IDequipment is required"],
+  },
+  typeequipment: {
+    type: Schema.Types.ObjectId,
+    ref: "Typeequipment",
+    required: [true, "The Typeequipment is required"],
   },
   assignedby: {
     type: Schema.Types.ObjectId,

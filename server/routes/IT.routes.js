@@ -1,10 +1,5 @@
-const usermodel = require("../models/IT.model");
+const Itmodel = require("../models/IT.model");
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const keys = require("../middlewares/keys");
-const bcrypt = require("bcryptjs");
-const validateRegisterInput = require("../validation/register");
-const validateLoginInput = require("../validation/login");
 const app = express();
 
 app.get("/", async (req, res) => {
@@ -85,47 +80,27 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/", async (req, res) => {
-  const { errors, isValid } = validateRegisterInput(req.body);
 
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  usermodel.findOne({ email: req.body.email }).then((user) => {
+  Itmodel.findOne({ email: req.body.email }).then((user) => {
     if (user) {
       return res.status(400).json({ infoError: "Email already exists" });
     } else {
-      const newUser = new usermodel({
-        ITIDcampus: req.body.IDcampus,
-        ITpicture: req.body.picture,
-        ITusername: req.body.username,
-        ITlastname: req.body.lastname,
-        ITemail: req.body.email,
-        ITphonenumber: req.body.phonenumber,
-        ITuserprofile: req.body.userprofile,
-        ITIDrole: req.body.IDrole,
-        ITaccount: req.body.account,
-        ITpassword: req.body.password,
+      const newUser = new Itmodel({
+        ITname: req.body.ITname,
+        ITemail: req.body.ITemail,
       });
-
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
           newUser
             .save()
             .then((user) => res.json(user))
             .catch((err) => console.log(err));
-        });
+        }
       });
-    }
-  });
 });
 
 app.put("/", async (req, res) => {
   try {
-    const idUser = req.query.idUser;
-    if (req.query.idUser == "") {
+    const idit = req.query.idit;
+    if (req.query.idit == "") {
       return res.status(400).send({
         estatus: "400",
         err: true,
@@ -133,8 +108,8 @@ app.put("/", async (req, res) => {
         cont: 0,
       });
     }
-    req.body._id = idUser;
-    const Userfind = await usermodel.findById(idUser);
+    req.body._id = idit;
+    const Userfind = await Itmodel.findById(idit);
     if (!Userfind) {
       return res.status(404).send({
         estatus: "404",
@@ -143,7 +118,7 @@ app.put("/", async (req, res) => {
         cont: Userfind,
       });
     }
-    const newuser = new usermodel(req.body);
+    const newuser = new Itmodel(req.body);
     let err = newuser.validateSync();
     if (err) {
       return res.status(400).json({
@@ -155,8 +130,8 @@ app.put("/", async (req, res) => {
         },
       });
     }
-    const userupdate = await usermodel.findByIdAndUpdate(
-      idUser,
+    const userupdate = await Itmodel.findByIdAndUpdate(
+      idit,
       { $set: newuser },
       { new: true }
     );
@@ -191,7 +166,7 @@ app.put("/", async (req, res) => {
 
 app.delete("/", async (req, res) => {
   try {
-    if (req.query.idUser == "") {
+    if (req.query.idit == "") {
       return res.status(400).send({
         estatus: "400",
         err: true,
@@ -199,9 +174,9 @@ app.delete("/", async (req, res) => {
         cont: 0,
       });
     }
-    idUser = req.query.idUser;
-    status = req.body.status;
-    const userfind = await usermodel.findById(idUser);
+    idit = req.query.idit;
+    ITstatus = req.body.ITstatus;
+    const userfind = await Itmodel.findById(idit);
     if (!userfind) {
       return res.status(404).send({
         estatus: "404",
@@ -210,9 +185,9 @@ app.delete("/", async (req, res) => {
         cont: userfind,
       });
     }
-    const userupdate = await usermodel.findByIdAndUpdate(
-      idUser,
-      { $set: { status: status } },
+    const userupdate = await Itmodel.findByIdAndUpdate(
+      idit,
+      { $set: { ITstatus: ITstatus } },
       { new: true }
     );
     if (!userupdate) {
@@ -227,7 +202,7 @@ app.delete("/", async (req, res) => {
         ok: true,
         resp: 200,
         msg: `Success: Se a ${
-          status === "true" ? "Activate" : "Delete"
+          ITstatus === "true" ? "Activate" : "Delete"
         } the user`,
       });
     }
@@ -243,104 +218,5 @@ app.delete("/", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
-  //////// FORM VALIDATION
-  const { errors, isValid } = validateLoginInput(req.body);
-
-   //////// CHECK VALIDATION
-   if (!isValid) {
-     return res.status(400).json(errors);
-   }
- 
-   const email = req.body.email;
-   const password = req.body.password;
- 
-   ///////// FIND USER BY EMAIL
-   usermodel.findOne({ email }).then(user => {
-     /////// CHECK IF USER EXISTS
-     if (!user) {
-       return res.status(404).json({ infoError: "Email not found" });
-     }
- 
-     /////// CHECK PASSWORD
-     bcrypt.compare(password, user.password).then(isMatch => {
-       if (isMatch) {
-         // USER MATCHED
-         // CREATE JWT PAYLOAD
-         const payload = {
-           id: user.id,
-           ITusername: user.username,
-           ITlastname: user.lastname,
-           ITemail: user.email,
-           ITphonenumber: user.phonenumber,
-           ITuserprofile: user.userprofile,
-           ITaccount: user.account,
-           ITIDcampus: user.IDcampus
-         };
- 
-         // SIGN TOKEN
-         jwt.sign(
-           payload,
-           keys.secretOrKey,
-           {
-             expiresIn: 3600 // 1 hour in seconds
-           },
-           (err, token) => {
-             res.json({
-               success: true,
-               token: "Token " + token,
-               id: user.id,
-               ITusername: user.username,
-               ITlastname: user.lastname,
-               ITemail: user.email,
-               ITphonenumber: user.phonenumber,
-               ITuserprofile: user.userprofile,
-               ITaccount: user.account,
-               ITIDcampus: user.IDcampus
-             });
-           }
-         );
-       } else {
-         return res
-           .status(400)
-           .json({ infoError: "Password incorrect" });
-       }
-     });
-   });
-});
-
-app.get("/userName", async (req, res) => {
-  try {
-    const user = await usermodel.find({},{"ITusername":1,"ITlastname":2,"ITaccount":3});
-    if (user.length <= 0) {
-      res.status(404).send({
-        estatus: "404",
-        err: true,
-        msg: "No users were found in the database.",
-        cont: {
-          user,
-        },
-      });
-    } else {
-      res.status(200).send({
-        estatus: "200",
-        err: false,
-        msg: "Information obtained correctly.",
-        cont: {
-          user,
-        },
-      });
-    }
-  } catch (err) {
-    res.status(500).send({
-      estatus: "500",
-      err: true,
-      msg: "Error getting user.",
-      cont: {
-        err: Object.keys(err).length === 0 ? err.message : err,
-      },
-    });
-  }
-});
 
 module.exports = app;
