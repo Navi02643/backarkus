@@ -72,7 +72,7 @@ app.post("/generateReport", async (req, res) => {
         let options = {
           format: "A4",
           border: {
-            right: "2.54cm",
+            right: "2.54cm", 
             left: "2.54cm",
           },
           header: {
