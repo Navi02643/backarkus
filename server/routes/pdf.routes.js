@@ -1,4 +1,4 @@
-const equipmentmodel = require("../models/assigned.model");
+const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
 let ejs = require("ejs");
 let pdf = require("html-pdf");
@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 
 app.post("/generateReport", async (req, res) => {
   email = req.query.email;
+  const ITname = req.body.ITname;
   const equipment = await equipmentmodel.aggregate([
     {
       $lookup: {
@@ -34,14 +35,6 @@ app.post("/generateReport", async (req, res) => {
       },
     },
     {
-      $lookup: {
-        from: "its",
-        localField: "assignedby",
-        foreignField: "_id",
-        as: "IT",
-      },
-    },
-    {
       $replaceRoot: {
         newRoot: {
           $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
@@ -63,13 +56,6 @@ app.post("/generateReport", async (req, res) => {
       },
     },
     {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
-        },
-      },
-    },
-    {
       $match: {
         $and: [{ email: email }],
       },                                                          
@@ -78,7 +64,7 @@ app.post("/generateReport", async (req, res) => {
   console.log(equipment)
   ejs.renderFile(
     path.join(__dirname, "../documents", "carta.ejs"),
-    { equipment: equipment },
+    { equipment: equipment, ITname: ITname},
     (err, data) => {
       if (err) {
         res.send(err);
@@ -115,34 +101,34 @@ app.post("/generateReport", async (req, res) => {
 
     // //////////////////////////SEND EMAIL/////////////////////////////////
 
-    // let transporter = nodemailer.createTransport({
-    //   host: 'smtp.gmail.com',
-    //   port: 465,
-    //   secure: true,
-    //   auth: {
-    //       user: 'arkusnexus.inventory@gmail.com',
-    //       pass: ' cnfjtmiridqbsnnb'
-    //   },
-    //   tls: {
-    //       rejectUnauthorized: false
-    //   }
-    // });
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+          user: 'arkusnexus.inventory@gmail.com',
+          pass: ' cnfjtmiridqbsnnb'
+      },
+      tls: {
+          rejectUnauthorized: false
+      }
+    });
 
-    // let info = await transporter.sendMail({
-    //   from: '"ArkusNexus Inventory" <arkusnexus.inventory@gmail.com>',
-    //   to: email,
-    //   subject: 'Commitment letter',
-    //   text: 'Hello, the following commitment letter contains the teams currently assigned',
-    //   attachments: [
-    //     { 
-    //       filename: 'Carta-Compromiso.pdf', 
-    //       path: __dirname + '/public/Carta-compromiso.pdf', 
-    //       contentType: 'application/pdf' 
-    //     }
-    //   ]
-    // })
-    // console.log('E-mail sent: %s', info.messageId);
-    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    let info = await transporter.sendMail({
+      from: '"ArkusNexus Inventory" <arkusnexus.inventory@gmail.com>',
+      to: email,
+      subject: 'Commitment letter',
+      text: 'Hello, the following commitment letter contains the teams currently assigned',
+      attachments: [
+        { 
+          filename: 'Carta-Compromiso.pdf', 
+          path: __dirname + '/public/Carta-compromiso.pdf', 
+          contentType: 'application/pdf' 
+        }
+      ]
+    })
+    console.log('E-mail sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
 
 });

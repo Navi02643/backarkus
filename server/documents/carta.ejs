@@ -6,13 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body{
+            font-family:  Arial,
+            SunSans-Regular, sans-serif }
+    </style>
 </head>
 
 <body>
     <% if (equipment) { %>
        
-        <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric' ,
-                month: 'numeric' , day: '2-digit' }).format(new Date()) %>
+        <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric', month: 'long', day: '2-digit'}).format(new Date()) %>
         </p>
         <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
        
@@ -109,6 +113,7 @@
             de
             los
             equipos, accesorios o dispositivos que se le hayan entregado a la oficina de Arkusnexus. </p>
+            <br><br><br>
         <table style="margin-left: auto; margin-right: auto;width: 100%; padding: 5%">
             <tr style="column-width: 50%; padding: 25%">
                 <td style=" padding: 5%; text-align: center;">COLABORADOR</td>
@@ -123,8 +128,7 @@
                 </td>
                 <td></td>
                 <td style="border-top: 1px solid black; text-align: center;">
-                    <%= equipment.username %>
-                        <%= equipment.lastname %>
+                    <%= ITname %>
                 </td>
             </tr>
         </table>
