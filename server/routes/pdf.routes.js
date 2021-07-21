@@ -1,4 +1,4 @@
-const equipmentmodel = require("../models/assigned.model");
+const equipmentmodel = require("../models/equipments.model");
 const express = require("express");
 let ejs = require("ejs");
 let pdf = require("html-pdf");
@@ -34,14 +34,6 @@ app.post("/generateReport", async (req, res) => {
       },
     },
     {
-      $lookup: {
-        from: "its",
-        localField: "assignedby",
-        foreignField: "_id",
-        as: "IT",
-      },
-    },
-    {
       $replaceRoot: {
         newRoot: {
           $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
@@ -63,18 +55,12 @@ app.post("/generateReport", async (req, res) => {
       },
     },
     {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ["$IT", 0] }, "$$ROOT"],
-        },
-      },
-    },
-    {
       $match: {
         $and: [{ email: email }],
       },                                                          
     },
   ]);
+  console.log(equipment);
   if (equipment.length <= 0) {
     res.status(404).send({
       estatus: "404",

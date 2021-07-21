@@ -12,7 +12,7 @@
     <% if (equipment) { %>
        
         <p style="text-align: right;">Aguascalientes, Ags <%= new Intl.DateTimeFormat('es-GB', { year: 'numeric' ,
-                month: 'numeric' , day: '2-digit' }).format(new Date()) %>
+                month: 'long' , day: '2-digit' }).format(new Date()) %>
         </p>
         <p style="text-align: center;">ASIGNACIÓN DE EQUIPO DE TRABAJO </p>
        
@@ -117,14 +117,13 @@
                
             </tr>
             <tr style="column-width: 50%; padding: 25%">
-                <td style="border-top: 1px solid black; text-align: center;">
+                <td style="border-top: 1px solid black; text-align: center; width: 50%;">
                     <%= equipment[0].username %>
                         <%= equipment[0].lastname %>
                 </td>
                 <td></td>
-                <td style="border-top: 1px solid black; text-align: center;">
-                    <%= equipment.username %>
-                        <%= equipment.lastname %>
+                <td style="border-top: 1px solid black; text-align: center; width: 50%;">
+                    <%= equipment[0].ITname >
                 </td>
             </tr>
         </table>
