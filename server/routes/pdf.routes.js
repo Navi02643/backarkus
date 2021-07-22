@@ -90,7 +90,7 @@ app.post("/generateReport", async (req, res) => {
               res.send(err);
             } else {
               res.status(400).json({
-                estatus: "200",
+                estatus: "400",
                 err: false,
                 msg: "document generated successfully.",
               });
