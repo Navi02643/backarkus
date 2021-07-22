@@ -393,7 +393,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/userName", async (req, res) => {
   try {
-    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3});
+    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3, "email": 4});
     if (user.length <= 0) {
       res.status(404).send({
         estatus: "404",

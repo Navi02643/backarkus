@@ -111,10 +111,18 @@ app.get("/user", async (req, res) => {
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
-          from: "campus",
-          localField: "IDcampus",
+          from: "users",
+          localField: "IDuser",
           foreignField: "_id",
-          as: "campus",
+          as: "users",
+        },
+      },
+      {
+        $lookup: {
+          from: "equipment",
+          localField: "IDequipment",
+          foreignField: "_id",
+          as: "equipment",
         },
       },
       {
@@ -126,17 +134,16 @@ app.get("/user", async (req, res) => {
         },
       },
       {
-        $lookup: {
-          from: "users",
-          localField: "IDuser",
-          foreignField: "_id",
-          as: "user",
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
+          },
         },
       },
       {
         $replaceRoot: {
           newRoot: {
-            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+            $mergeObjects: [{ $arrayElemAt: ["$equipment", 0] }, "$$ROOT"],
           },
         },
       },
@@ -148,19 +155,22 @@ app.get("/user", async (req, res) => {
         },
       },
       {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
-          },
-        },
-      },
-      {
         $match: {
-          $and: [{ email: email },],
-        },
+          $and: [{ email: email }],
+        },                                                          
       },
     ]);
     console.log(equipment);
+    if (equipment) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: equipment,
+        },
+      });
+    }
   } catch (err) {
     res.status(500).send({
       estatus: "500",
