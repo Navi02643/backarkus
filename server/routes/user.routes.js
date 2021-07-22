@@ -84,6 +84,88 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/infoUser", async (req, res) => {
+  try {
+    email = req.query.email;
+    const user = await usermodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "IDrole",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$roles", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ email: email }],
+        },                                                          
+      },
+    ]);
+  
+    if (user) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: user,
+        },
+      });
+    }
+    if (user.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No users were found in the database.",
+        cont: {
+          user,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          user,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting user.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 app.post("/", async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -247,10 +329,10 @@ app.post("/login", async (req, res) => {
   //////// FORM VALIDATION
   const { errors, isValid } = validateLoginInput(req.body);
 
-   //////// CHECK VALIDATION
-   if (!isValid) {
+  //////// CHECK VALIDATION
+  if (!isValid) {
      return res.status(400).json(errors);
-   }
+  }
  
    const email = req.body.email;
    const password = req.body.password;
@@ -261,7 +343,7 @@ app.post("/login", async (req, res) => {
      if (!user) {
        return res.status(404).json({ infoError: "Email not found" });
      }
- 
+    
      /////// CHECK PASSWORD
      bcrypt.compare(password, user.password).then(isMatch => {
        if (isMatch) {
@@ -283,12 +365,12 @@ app.post("/login", async (req, res) => {
            payload,
            keys.secretOrKey,
            {
-             expiresIn: 3600 // 1 hour in seconds
+             expiresIn: 100 // 1 hour in seconds
            },
            (err, token) => {
              res.json({
                success: true,
-               token: "Token " + token,
+               token: token,
                id: user.id,
                username: user.username,
                lastname: user.lastname,
