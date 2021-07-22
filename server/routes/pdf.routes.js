@@ -9,6 +9,7 @@ const nodemailer = require("nodemailer");
 app.post("/generateReport", async (req, res) => {
   email = req.query.email;
   const ITname = req.body.ITname;
+  const ITemail = req.body.ITemail;
   const equipment = await equipmentmodel.aggregate([
     {
       $lookup: {
@@ -117,8 +118,8 @@ app.post("/generateReport", async (req, res) => {
     let info = await transporter.sendMail({
       from: '"ArkusNexus Inventory" <arkusnexus.inventory@gmail.com>',
       to: email,
-      subject: 'Commitment letter',
-      text: 'Hello, the following commitment letter contains the teams currently assigned',
+      subject: 'CARTA RESPONSIVA PARA ASIGNACIÓN DE EQUIPO',
+      text: 'Buen día!, su carta responsiva se ha generado con éxito, en ella encontrara información de suma importancia, por lo cual se requiere que se lea cuidadosamente y después de esa acción sea enviada por correo a quien corresponde a la autorización de IT. El email para enviar la carta es el siguiente: ' + ITemail,
       attachments: [
         { 
           filename: 'Carta-Compromiso.pdf', 
