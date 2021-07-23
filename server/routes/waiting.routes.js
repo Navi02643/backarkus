@@ -119,6 +119,9 @@ app.post("/", async (req, res) => {
         estatus: "200",
         err: false,
         msg: "Success: Information inserted correctly.",
+        cont: {
+          newWaiting,
+        },
       });
     }
   } catch (err) {

@@ -108,6 +108,7 @@ app.get("/", async (req, res) => {
 app.get("/state", async (req, res) => {
   try {
     state = req.query.state;
+    tename = req.query.tename;
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
@@ -157,6 +158,11 @@ app.get("/state", async (req, res) => {
       {
         $match: {
           $and: [{ state: state }],
+        },
+      },
+      {
+        $match: {
+          $and: [{ tename: tename }],
         },
       },
     ]);
