@@ -105,6 +105,104 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/state", async (req, res) => {
+  try {
+    state = req.query.state;
+    const equipment = await equipmentmodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "typeequipments",
+          localField: "IDtypeequipment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ state: state }],
+        },
+      },
+    ]);
+    idEquipment = req.query.idEquipment;
+    const equipmentfind = await equipmentmodel.findById(idEquipment);
+    if (equipmentfind) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: equipmentfind,
+        },
+      });
+    }
+    if (equipment.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No equipments were found in the database.",
+        cont: {
+          equipment,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          equipment,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting equipments.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 app.get("/user", async (req, res) => {
   try {
     equipmentuser = req.query.equipmentuser;
