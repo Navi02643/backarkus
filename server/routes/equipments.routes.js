@@ -158,15 +158,15 @@ app.get("/user", async (req, res) => {
       },
       {
         $match: {
-          $and: [{ email: email }],
+          
           $and: [{ mark: equipmentuser }, { status: true }],
         },                                                          
       },
-      // {
-      //   $match: {
-      //    
-      //   },
-      // },
+      {
+        $match: {
+         $and: [{ email: email }],
+        },
+      },
     ]);
     console.log(equipment);
     if (equipment) {
