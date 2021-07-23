@@ -4,7 +4,7 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const user = await usermodel.aggregate([
+    const user = await Itmodel.aggregate([
       {
         $lookup: {
           from: "campus",
@@ -37,7 +37,7 @@ app.get("/", async (req, res) => {
       },
     ]);
     idUser = req.query.idUser;
-    const userfind = await usermodel.findById(idUser);
+    const userfind = await Itmodel.findById(idUser);
     if (userfind) {
       return res.status(400).json({
         estatus: "200",
