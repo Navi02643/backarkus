@@ -107,6 +107,8 @@ app.get("/", async (req, res) => {
 
 app.get("/user", async (req, res) => {
   try {
+    equipmentuser = req.query.equipmentuser;
+    status = req.query.status;
     email = req.query.email;
     const equipment = await equipmentmodel.aggregate([
       {
@@ -157,8 +159,14 @@ app.get("/user", async (req, res) => {
       {
         $match: {
           $and: [{ email: email }],
+          $and: [{ mark: equipmentuser }, { status: true }],
         },                                                          
       },
+      // {
+      //   $match: {
+      //    
+      //   },
+      // },
     ]);
     console.log(equipment);
     if (equipment) {
