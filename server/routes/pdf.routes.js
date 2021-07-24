@@ -61,6 +61,11 @@ app.post("/generateReport", async (req, res) => {
         $and: [{ email: email }],
       },                                                          
     },
+    {
+      $match: {
+        $and: [{ state: "Asignado" }],
+      },
+    },
   ]);
   console.log(equipment)
   ejs.renderFile(
