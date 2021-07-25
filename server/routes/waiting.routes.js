@@ -37,7 +37,7 @@ app.get("/", async (req, res) => {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           username: 1,
           lastname: 1,
           IDuser: 1,
