@@ -262,14 +262,13 @@ app.get("/user", async (req, res) => {
       },
       {
         $match: {
-          
-          $and: [{ mark: equipmentuser }, { status: true }],
-        },                                                          
+         $and: [{ email: email }],
+        },
       },
       {
         $match: {
-         $and: [{ email: email }],
-        },
+          $and: [{status: true }],
+        },                                                          
       },
     ]);
     console.log(equipment);
