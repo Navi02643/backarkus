@@ -162,6 +162,11 @@ app.get("/state", async (req, res) => {
       },
       {
         $match: {
+          $and: [{ status: true }],
+        },
+      },
+      {
+        $match: {
           $and: [{ tename: tename }],
         },
       },
