@@ -81,7 +81,7 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
 
-  Itmodel.findOne({ email: req.body.email }).then((user) => {
+  Itmodel.findOne({ ITemail: req.body.ITemail }).then((user) => {
     if (user) {
       return res.status(400).json({ infoError: "Email already exists" });
     } else {
@@ -185,10 +185,8 @@ app.delete("/", async (req, res) => {
         cont: userfind,
       });
     }
-    const userupdate = await Itmodel.findByIdAndUpdate(
-      idit,
-      { $set: { ITstatus: ITstatus } },
-      { new: true }
+    const userupdate = await Itmodel.findByIdAndDelete(
+      idit
     );
     if (!userupdate) {
       return res.status(400).json({
