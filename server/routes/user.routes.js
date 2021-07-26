@@ -3,7 +3,6 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const keys = require("../middlewares/keys");
 const bcrypt = require("bcryptjs");
-const _ = require('underscore');
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const app = express();
@@ -284,7 +283,7 @@ app.put("/role", async (req, res) => {
       });
     }
     req.body._id = idUser;
-    const Userfind = await usermodelrole.findById(idUser);
+    const Userfind = await usermodel.findById(idUser);
     if (!Userfind) {
       return res.status(404).send({
         estatus: "404",
@@ -293,7 +292,7 @@ app.put("/role", async (req, res) => {
         cont: Userfind,
       });
     }
-    const newuser = new usermodelrole(req.body);
+    const newuser = new usermodel(req.body);
     let err = newuser.validateSync();
     if (err) {
       return res.status(400).json({
@@ -305,7 +304,7 @@ app.put("/role", async (req, res) => {
         },
       });
     }
-    const userupdate = await usermodelrole.findByIdAndUpdate(
+    const userupdate = await usermodel.findByIdAndUpdate(
       idUser,
       { $set: newuser },
       { new: true }
