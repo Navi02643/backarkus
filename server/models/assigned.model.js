@@ -7,14 +7,20 @@ const assignedSchema = new Schema({
     ref: "User",
     required: [true, "The IDuser is required"],
   },
-  serialnumber: {
+  IDequipment: {
     type: Schema.Types.ObjectId,
     ref: "Equipment",
-    required: [true, "The serial number is required"],
+    required: [true, "The IDequipment is required"],
+  },
+  IDtypeequipment: {
+    type: Schema.Types.ObjectId,
+    ref: "Typeequipment",
+    required: [true, "The Typeequipment is required"],
   },
   assignedby: {
-    type: String,
-    required: [true, "the name of the person who assigns the team is required"],
+    type: Schema.Types.ObjectId,
+    ref: "IT",
+    required: [true, "The ITIDuser is required"],
   },
   status: {
     type: Boolean,

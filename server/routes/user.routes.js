@@ -9,7 +9,38 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const user = await usermodel.find({ status: true });
+    const user = await usermodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "IDrole",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$roles", 0] }, "$$ROOT"],
+          },
+        },
+      },
+    ]);
     idUser = req.query.idUser;
     const userfind = await usermodel.findById(idUser);
     if (userfind) {
@@ -19,6 +50,88 @@ app.get("/", async (req, res) => {
         msg: "Information obtained correctly.",
         cont: {
           name: userfind,
+        },
+      });
+    }
+    if (user.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No users were found in the database.",
+        cont: {
+          user,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          user,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting user.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
+app.get("/infoUser", async (req, res) => {
+  try {
+    email = req.query.email;
+    const user = await usermodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "IDrole",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$roles", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ email: email }],
+        },                                                          
+      },
+    ]);
+  
+    if (user) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: user,
         },
       });
     }
@@ -158,6 +271,73 @@ app.put("/", async (req, res) => {
   }
 });
 
+app.put("/role", async (req, res) => {
+  try {
+    const idUser = req.query.idUser;
+    if (req.query.idUser == "") {
+      return res.status(400).send({
+        estatus: "400",
+        err: true,
+        msg: "Error: A valid id was not sent.",
+        cont: 0,
+      });
+    }
+    req.body._id = idUser;
+    const Userfind = await usermodel.findById(idUser);
+    if (!Userfind) {
+      return res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "Error: The user was not found in the database.",
+        cont: Userfind,
+      });
+    }
+    const newuser = new usermodel(req.body);
+    let err = newuser.validateSync();
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        resp: 400,
+        msg: "Error: Error inserting user.",
+        cont: {
+          err,
+        },
+      });
+    }
+    const userupdate = await usermodel.findByIdAndUpdate(
+      idUser,
+      { $set: newuser },
+      { new: true }
+    );
+    if (!userupdate) {
+      return res.status(400).json({
+        ok: false,
+        resp: 400,
+        msg: "Error: Trying to update the user.",
+        cont: 0,
+      });
+    } else {
+      return res.status(200).json({
+        ok: true,
+        resp: 200,
+        msg: "Success: The user was updated successfully.",
+        cont: {
+          Userfind,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error: Error updating user.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
 app.delete("/", async (req, res) => {
   try {
     if (req.query.idUser == "") {
@@ -181,7 +361,7 @@ app.delete("/", async (req, res) => {
     }
     const userupdate = await usermodel.findByIdAndUpdate(
       idUser,
-      { $set: { status } },
+      { $set: { status: status } },
       { new: true }
     );
     if (!userupdate) {
@@ -216,10 +396,10 @@ app.post("/login", async (req, res) => {
   //////// FORM VALIDATION
   const { errors, isValid } = validateLoginInput(req.body);
 
-   //////// CHECK VALIDATION
-   if (!isValid) {
+  //////// CHECK VALIDATION
+  if (!isValid) {
      return res.status(400).json(errors);
-   }
+  }
  
    const email = req.body.email;
    const password = req.body.password;
@@ -230,7 +410,7 @@ app.post("/login", async (req, res) => {
      if (!user) {
        return res.status(404).json({ infoError: "Email not found" });
      }
- 
+    
      /////// CHECK PASSWORD
      bcrypt.compare(password, user.password).then(isMatch => {
        if (isMatch) {
@@ -243,7 +423,9 @@ app.post("/login", async (req, res) => {
            email: user.email,
            phonenumber: user.phonenumber,
            userprofile: user.userprofile,
-           account: user.account
+           account: user.account,
+           IDcampus: user.IDcampus,
+           IDrole: user.IDrole
          };
  
          // SIGN TOKEN
@@ -251,19 +433,21 @@ app.post("/login", async (req, res) => {
            payload,
            keys.secretOrKey,
            {
-             expiresIn: 3600 // 1 hour in seconds
+             expiresIn: 100 // 1 hour in seconds
            },
            (err, token) => {
              res.json({
                success: true,
-               token: "Token " + token,
+               token: token,
                id: user.id,
                username: user.username,
                lastname: user.lastname,
                email: user.email,
                phonenumber: user.phonenumber,
                userprofile: user.userprofile,
-               account: user.account
+               account: user.account,
+               IDcampus: user.IDcampus,
+               IDrole: user.IDrole
              });
            }
          );
@@ -278,7 +462,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/userName", async (req, res) => {
   try {
-    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3});
+    const user = await usermodel.find({},{"username":1,"lastname":2,"account":3, "email": 4});
     if (user.length <= 0) {
       res.status(404).send({
         estatus: "404",

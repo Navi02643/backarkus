@@ -14,6 +14,9 @@ const equipmentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Typeequipment",
   },
+  assignedBy: {
+    type: String,
+  },
   mark: {
     type: String,
   },

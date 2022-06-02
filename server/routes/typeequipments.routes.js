@@ -6,7 +6,7 @@ app.get("/", async (req, res) => {
   try {
     const typeequipment = await Typeequipmentmodel.find({ status: true });
     idTypeEquipment = req.query.idTypeEquipment;
-    tename = req.query.tename;
+    // tename = req.query.tename;
     const typeequipmentfind = await Typeequipmentmodel.findById(
       idTypeEquipment
     );
@@ -17,7 +17,7 @@ app.get("/", async (req, res) => {
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: typeequipmentfindbyname,
+          name: typeequipmentfind,
         },
       });
     }
@@ -69,13 +69,14 @@ app.post("/", async (req, res) => {
     const typeequipmentfind = await Typeequipmentmodel.findOne({
       tename: { $regex: `${typeequipment.tename}$`, $options: "i" },
     });
+    console.log(typeequipmentfind);
     if (typeequipmentfind) {
       return res.status(400).json({
         ok: false,
         resp: 400,
         msg: "The type of equipment you are trying to register already exists",
         cont: {
-          tename: typeequipmentfind.tename,
+          tename: typeequipmentfind,
         },
       });
     }
