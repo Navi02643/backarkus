@@ -37,7 +37,7 @@ app.get("/", async (req, res) => {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           username: 1,
           lastname: 1,
           IDuser: 1,
@@ -119,6 +119,9 @@ app.post("/", async (req, res) => {
         estatus: "200",
         err: false,
         msg: "Success: Information inserted correctly.",
+        cont: {
+          newWaiting,
+        },
       });
     }
   } catch (err) {

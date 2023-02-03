@@ -5,6 +5,8 @@ const app = express();
 app.get("/", async (req, res) => {
   try {
     typeequipment = req.query.typeequipment;
+    state = req.query.state;
+    status = req.query.status;
     const equipment = await equipmentmodel.aggregate([
       {
         $lookup: {
@@ -53,8 +55,11 @@ app.get("/", async (req, res) => {
       },
       {
         $match: {
-          tename: typeequipment,
+          $and: [{ tename: typeequipment }, { status: true }],
         },
+      },
+      {
+        $sort: { state: -1 },
       },
     ]);
     idEquipment = req.query.idEquipment;
@@ -65,7 +70,7 @@ app.get("/", async (req, res) => {
         err: false,
         msg: "Information obtained correctly.",
         cont: {
-          name: equipmentfind
+          name: equipmentfind,
         },
       });
     }
@@ -85,6 +90,200 @@ app.get("/", async (req, res) => {
         msg: "Information obtained correctly.",
         cont: {
           equipment,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting equipments.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
+app.get("/state", async (req, res) => {
+  try {
+    state = req.query.state;
+    tename = req.query.tename;
+    const equipment = await equipmentmodel.aggregate([
+      {
+        $lookup: {
+          from: "campus",
+          localField: "IDcampus",
+          foreignField: "_id",
+          as: "campus",
+        },
+      },
+      {
+        $lookup: {
+          from: "typeequipments",
+          localField: "IDtypeequipment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$campus", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ state: state }],
+        },
+      },
+      {
+        $match: {
+          $and: [{ status: true }],
+        },
+      },
+      {
+        $match: {
+          $and: [{ tename: tename }],
+        },
+      },
+    ]);
+    idEquipment = req.query.idEquipment;
+    const equipmentfind = await equipmentmodel.findById(idEquipment);
+    if (equipmentfind) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: equipmentfind,
+        },
+      });
+    }
+    if (equipment.length <= 0) {
+      res.status(404).send({
+        estatus: "404",
+        err: true,
+        msg: "No equipments were found in the database.",
+        cont: {
+          equipment,
+        },
+      });
+    } else {
+      res.status(200).send({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          equipment,
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      estatus: "500",
+      err: true,
+      msg: "Error getting equipments.",
+      cont: {
+        err: Object.keys(err).length === 0 ? err.message : err,
+      },
+    });
+  }
+});
+
+app.get("/user", async (req, res) => {
+  try {
+    equipmentuser = req.query.equipmentuser;
+    status = req.query.status;
+    email = req.query.email;
+    const equipment = await equipmentmodel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "IDuser",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+      {
+        $lookup: {
+          from: "equipment",
+          localField: "IDequipment",
+          foreignField: "_id",
+          as: "equipment",
+        },
+      },
+      {
+        $lookup: {
+          from: "typeequipments",
+          localField: "IDtypeequipment",
+          foreignField: "_id",
+          as: "typeequipments",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$equipment", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$typeequipments", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      {
+        $match: {
+         $and: [{ email: email }],
+        },
+      },
+      {
+        $match: {
+          $and: [{status: true }],
+        },                                                          
+      },
+    ]);
+    console.log(equipment);
+    if (equipment) {
+      return res.status(400).json({
+        estatus: "200",
+        err: false,
+        msg: "Information obtained correctly.",
+        cont: {
+          name: equipment,
         },
       });
     }
@@ -210,7 +409,7 @@ app.put("/", async (req, res) => {
         resp: 200,
         msg: "Success: The equipment was update successfully.",
         cont: {
-          equipmentfind,
+          equipmentupdate,
         },
       });
     }
@@ -249,7 +448,7 @@ app.delete("/", async (req, res) => {
     }
     const equipmentupdate = await equipmentmodel.findByIdAndUpdate(
       idEquipment,
-      { $set: { status } },
+      { $set: { status: status, state: "Fuera de servicio" } },
       { new: true }
     );
     if (!equipmentupdate) {
